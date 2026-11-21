@@ -1,0 +1,2903 @@
+<!DOCTYPE html>
+<html lang="fr" class="verrou">
+<head>
+<meta charset="utf-8">
+<!-- Sécurité : règle de sécurité du contenu (CSP), la page ne peut faire que ce qui est autorisé -->
+<meta http-equiv="Content-Security-Policy" content="default-src 'none'; script-src 'sha256-1QfghhuDiYwQv9F9Vf8sy3cwqesGO7EsXIS51bp3Gu4=' https://cdn.sheetjs.com/xlsx-0.20.3/package/dist/xlsx.full.min.js https://cdnjs.cloudflare.com/ajax/libs/echarts/5.6.0/echarts.min.js; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com; font-src https://fonts.gstatic.com; img-src 'self' data: blob:; connect-src 'self'; object-src 'none'; base-uri 'none'; form-action 'none'">
+<meta name="referrer" content="no-referrer">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="color-scheme" content="dark">
+<meta name="theme-color" content="#000000">
+<meta name="description" content="Tableau de bord TFT IAS 7 d'Atlas Distribution SA (entreprise fictive) : flux de trésorerie 2027 face à 2026 et 14 KPI.">
+<title>Atlas Distribution SA · Situation TFT 2027</title>
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Crect width='64' height='64' rx='14' fill='%23000'/%3E%3Cpath d='M14 46 32 14l18 32' fill='none' stroke='%23E0AE28' stroke-width='4'/%3E%3Cpath d='M22 36h20' stroke='%23fff' stroke-width='3'/%3E%3C/svg%3E">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Cinzel:wght@400&amp;family=Inter:wght@300&amp;display=swap">
+<style>
+/* =====================================================================
+   DESIGN SYSTEM · écrit une seule fois, réutilisé partout
+   Style : glassmorphism noir « liquid UI » · mode sombre uniquement
+   Règle des couleurs : 60 % fond neutre, 30 % principale (blanc), 10 % accent (or)
+   ===================================================================== */
+:root {
+  /* Couleurs de la palette */
+  --c-fond: #000000;
+  --c-carte: #050505;
+  --c-texte: #E0AE28;
+  --c-texte-doux: rgba(224, 174, 40, 0.78);
+  --c-principale: #FFFFFF;
+  --c-principale-douce: rgba(255, 255, 255, 0.72);
+  --c-accent: #E0AE28;
+  --c-grenat: #A3263B;
+  /* Couleurs de signal, sobres, toujours avec une icône et un mot */
+  --c-vert: #45C486;
+  --c-orange: #F0913A;
+  --c-rouge: #F0566B;
+  --c-bleu: #6CB4F5;
+  --c-gris: #9A9A9A;
+  /* Verre noir laqué */
+  --verre-fond: rgba(5, 5, 5, 0.66);
+  --verre-bord: rgba(255, 255, 255, 0.10);
+  --verre-reflet: rgba(255, 255, 255, 0.06);
+  --verre-flou: blur(18px) saturate(140%);
+  /* Polices : 2 au maximum */
+  --police-titre: "Cinzel", "Times New Roman", serif;
+  --police-texte: "Inter", system-ui, -apple-system, "Segoe UI", Roboto, sans-serif;
+  /* Échelle de texte fixe */
+  --t-titre: 40px;
+  --t-sous-titre: 24px;
+  --t-cle: clamp(56px, 7vw, 104px);
+  --t-texte: 16px;
+  --t-legende: 13px;
+  /* Espacements : échelle de 8 px */
+  --e-1: 8px;
+  --e-2: 16px;
+  --e-3: 24px;
+  --e-4: 32px;
+  --e-5: 40px;
+  --e-6: 48px;
+  --e-8: 64px;
+  --e-12: 96px;
+  /* Rayons */
+  --r-1: 8px;
+  --r-2: 16px;
+  --r-3: 24px;
+  --r-rond: 999px;
+  /* Ombres */
+  --ombre-1: 0 1px 0 rgba(255, 255, 255, 0.05) inset, 0 16px 40px rgba(0, 0, 0, 0.65);
+  --ombre-2: 0 1px 0 rgba(255, 255, 255, 0.07) inset, 0 24px 64px rgba(0, 0, 0, 0.8);
+  /* Mise en page */
+  --rail: 80px;
+  --menu-ouvert: 360px;
+  --duree: 200ms;
+  --courbe: cubic-bezier(.2, .8, .2, 1);
+}
+
+*, *::before, *::after { box-sizing: border-box; }
+html { -webkit-text-size-adjust: 100%; background: var(--c-fond); }
+html.verrou body { visibility: hidden; }
+html.encadre body > * { display: none !important; }
+html.encadre body::before {
+  content: "Cette application ne peut pas être affichée à l'intérieur d'un autre site.";
+  display: block; padding: var(--e-5); color: var(--c-texte); font: 300 var(--t-texte) var(--police-texte);
+}
+body {
+  margin: 0; min-height: 100vh; overflow-x: hidden;
+  background: var(--c-fond); color: var(--c-texte);
+  font-family: var(--police-texte); font-weight: 300; font-size: var(--t-texte); line-height: 1.55;
+  -webkit-font-smoothing: antialiased; -moz-osx-font-smoothing: grayscale;
+}
+h1, h2, h3 { font-family: var(--police-titre); font-weight: 400; color: var(--c-principale); margin: 0; letter-spacing: 0.02em; }
+h1 { font-size: var(--t-titre); line-height: 1.15; }
+h2 { font-size: var(--t-sous-titre); line-height: 1.25; }
+h3 { font-size: var(--t-texte); line-height: 1.35; letter-spacing: 0.04em; }
+p { margin: 0; }
+a { color: inherit; }
+button { font: inherit; color: inherit; }
+:focus { outline: none; }
+:focus-visible { outline: 2px solid var(--c-accent); outline-offset: 3px; border-radius: 6px; }
+#titre-page:focus, #contenu:focus { outline: none; }
+.chiffre, .num { font-family: var(--police-titre); font-weight: 400; font-variant-numeric: tabular-nums lining-nums; color: var(--c-principale); }
+.unite { font-family: var(--police-titre); color: var(--c-accent); }
+.legende { font-size: var(--t-legende); color: var(--c-texte-doux); }
+.visuellement-cache { position: absolute !important; width: 1px; height: 1px; padding: 0; margin: -1px; overflow: hidden; clip: rect(0 0 0 0); white-space: nowrap; border: 0; }
+.lien-evitement { position: fixed; top: var(--e-1); left: var(--e-1); z-index: 200; padding: var(--e-1) var(--e-2); background: var(--c-accent); color: #000; border-radius: var(--r-1); transform: translateY(-200%); }
+.lien-evitement:focus-visible { transform: none; }
+svg.icone.grand { width: 56px; height: 56px; color: var(--c-accent); stroke-width: 1.2; }
+.volet .seulement-rail { display: none !important; }
+svg.icone { width: 20px; height: 20px; flex: none; stroke: currentColor; fill: none; stroke-width: 1.5; stroke-linecap: round; stroke-linejoin: round; }
+
+/* ---------- Fond animé noir liquid UI ---------- */
+.fond { position: fixed; inset: 0; z-index: 0; pointer-events: none; overflow: hidden; background: #000; }
+.fond .reflets {
+  position: absolute; inset: -30%;
+  background:
+    radial-gradient(38% 32% at 22% 18%, rgba(46, 46, 46, 0.55), rgba(0, 0, 0, 0) 70%),
+    radial-gradient(34% 30% at 78% 72%, rgba(36, 36, 36, 0.50), rgba(0, 0, 0, 0) 70%),
+    radial-gradient(26% 22% at 62% 28%, rgba(28, 28, 28, 0.45), rgba(0, 0, 0, 0) 70%),
+    radial-gradient(30% 26% at 30% 82%, rgba(24, 24, 24, 0.40), rgba(0, 0, 0, 0) 70%);
+  animation: glisse 26s ease-in-out infinite alternate;
+}
+.fond .lustre {
+  position: absolute; inset: -50%;
+  background: linear-gradient(115deg, rgba(255, 255, 255, 0) 42%, rgba(255, 255, 255, 0.035) 50%, rgba(255, 255, 255, 0) 58%);
+  animation: lustre 28s linear infinite;
+}
+.fond canvas { position: absolute; inset: 0; width: 100%; height: 100%; }
+@keyframes glisse { 0% { transform: translate3d(-4%, -3%, 0) scale(1); } 50% { transform: translate3d(3%, 2%, 0) scale(1.06); } 100% { transform: translate3d(-2%, 4%, 0) scale(1.02); } }
+@keyframes lustre { 0% { transform: translate3d(-30%, 0, 0); } 100% { transform: translate3d(30%, 0, 0); } }
+
+/* ---------- Verre noir laqué (cartes, panneaux) ---------- */
+.verre {
+  position: relative; isolation: isolate;
+  background: linear-gradient(180deg, var(--verre-reflet), rgba(255, 255, 255, 0) 38%), var(--verre-fond);
+  border: 1px solid var(--verre-bord); border-radius: var(--r-3);
+  -webkit-backdrop-filter: var(--verre-flou); backdrop-filter: var(--verre-flou);
+  box-shadow: var(--ombre-1);
+}
+.verre::before {
+  content: ""; position: absolute; left: 8%; right: 8%; top: 0; height: 1px; z-index: -1;
+  background: linear-gradient(90deg, rgba(255, 255, 255, 0), rgba(255, 255, 255, 0.28), rgba(255, 255, 255, 0));
+}
+
+/* ---------- Structure générale ---------- */
+.app { position: relative; z-index: 1; }
+.contenu { margin-left: var(--rail); padding: var(--e-5) var(--e-5) var(--e-12); max-width: calc(1440px + var(--rail)); }
+.contenu > * + * { margin-top: var(--e-4); }
+.section-titre { display: flex; align-items: baseline; justify-content: space-between; gap: var(--e-2); flex-wrap: wrap; margin-bottom: var(--e-3); }
+.section-titre p { font-size: var(--t-legende); color: var(--c-texte-doux); }
+.surtitre { font-size: var(--t-legende); letter-spacing: 0.16em; text-transform: uppercase; color: var(--c-texte-doux); }
+
+/* ---------- Menu latéral : rail d'icônes, déplié au survol ---------- */
+.menu {
+  position: fixed; inset: 0 auto 0 0; z-index: 60; width: var(--rail);
+  display: flex; flex-direction: column; overflow: hidden auto; overscroll-behavior: contain;
+  background: linear-gradient(180deg, rgba(255, 255, 255, 0.05), rgba(255, 255, 255, 0) 30%), rgba(2, 2, 2, 0.82);
+  border-right: 1px solid var(--verre-bord);
+  -webkit-backdrop-filter: var(--verre-flou); backdrop-filter: var(--verre-flou);
+  transition: width var(--duree) var(--courbe), box-shadow var(--duree);
+  scrollbar-width: thin; scrollbar-color: rgba(255, 255, 255, .15) transparent;
+}
+.menu:hover, .menu:focus-within, .menu.ouvert { width: var(--menu-ouvert); box-shadow: 24px 0 64px rgba(0, 0, 0, 0.7); }
+.marque { display: flex; align-items: center; gap: var(--e-2); min-height: 80px; padding: 0 0 0 20px; color: var(--c-principale); text-decoration: none; }
+.marque .logo { width: 40px; height: 40px; flex: none; border-radius: 12px; display: grid; place-items: center; border: 1px solid var(--verre-bord); background: #000; }
+.marque .logo svg { width: 24px; height: 24px; stroke: var(--c-accent); }
+.marque .nom { font-family: var(--police-titre); font-size: 15px; line-height: 1.2; white-space: nowrap; }
+.marque .nom small { display: block; font-family: var(--police-texte); font-size: 12px; color: var(--c-texte-doux); letter-spacing: .08em; }
+.libelle { white-space: nowrap; overflow: hidden; text-overflow: ellipsis; transition: opacity var(--duree); }
+.menu:not(:hover):not(:focus-within):not(.ouvert) .libelle,
+.menu:not(:hover):not(:focus-within):not(.ouvert) .marque .nom { opacity: 0; }
+.menu:not(:hover):not(:focus-within):not(.ouvert) .seulement-ouvert { display: none; }
+.menu:hover .seulement-rail, .menu:focus-within .seulement-rail, .menu.ouvert .seulement-rail { display: none; }
+.nav-liste { list-style: none; margin: 0; padding: var(--e-1) 0; }
+.nav-item { position: relative; }
+.nav-lien {
+  display: flex; align-items: center; gap: var(--e-2); min-height: 48px; margin: 2px 12px; padding: 0 14px;
+  border-radius: 14px; text-decoration: none; color: var(--c-texte); cursor: pointer; border: 1px solid transparent;
+  transition: background var(--duree), border-color var(--duree), color var(--duree);
+}
+.nav-lien:hover { background: rgba(255, 255, 255, 0.04); }
+.nav-lien[aria-current="page"] { color: var(--c-principale); background: rgba(255, 255, 255, 0.06); border-color: var(--verre-bord); }
+.nav-lien .libelle { flex: 1; min-width: 0; }
+.nav-famille { display: flex; align-items: center; margin: 2px 12px 2px 12px; }
+.nav-famille .nav-lien { flex: 1; margin: 0; min-width: 0; }
+.nav-famille .nav-lien .libelle { white-space: normal; line-height: 1.25; padding: 6px 0; }
+.menu:not(:hover):not(:focus-within):not(.ouvert) .nav-famille .nav-lien .libelle { white-space: nowrap; }
+.deplier {
+  width: 36px; height: 36px; flex: none; display: grid; place-items: center; border-radius: 10px; border: 0;
+  background: transparent; color: var(--c-texte-doux); cursor: pointer; transition: transform var(--duree), background var(--duree);
+}
+.deplier:hover { background: rgba(255, 255, 255, 0.05); }
+.deplier[aria-expanded="true"] svg { transform: rotate(90deg); }
+.deplier svg { transition: transform var(--duree); width: 16px; height: 16px; }
+.nav-sous { list-style: none; margin: 0 0 var(--e-1); padding: 0 0 0 52px; }
+.nav-sous .nav-lien { min-height: 40px; margin: 1px 12px 1px 0; font-size: 14px; gap: var(--e-1); padding: 0 10px; }
+.nav-sous .code { font-family: var(--police-titre); color: var(--c-accent); font-size: 12px; flex: none; }
+.nav-groupe { padding: var(--e-2) 0 var(--e-1) 34px; font-size: 12px; letter-spacing: .14em; text-transform: uppercase; color: var(--c-texte-doux); white-space: nowrap; }
+.point-feu { width: 8px; height: 8px; border-radius: 50%; flex: none; background: var(--c-gris); box-shadow: 0 0 10px currentColor; }
+.point-feu.vert { background: var(--c-vert); color: var(--c-vert); }
+.point-feu.orange { background: var(--c-orange); color: var(--c-orange); }
+.point-feu.rouge { background: var(--c-rouge); color: var(--c-rouge); }
+.point-feu.neutre { background: var(--c-gris); color: transparent; }
+.icone-feu-rail { position: absolute; top: 9px; left: 46px; }
+body.disjoncte .point-feu, body.disjoncte .nav-lien .pastille { visibility: hidden; }
+
+/* ---------- Pastilles de statut : couleur + icône + mot ---------- */
+.pastille {
+  display: inline-flex; align-items: center; gap: 6px; padding: 3px 10px 3px 8px; border-radius: var(--r-rond);
+  font-size: var(--t-legende); line-height: 1.4; white-space: nowrap; border: 1px solid currentColor; color: var(--c-gris);
+  background: rgba(0, 0, 0, 0.4);
+}
+.pastille svg { width: 14px; height: 14px; stroke-width: 2; }
+.pastille.vert { color: var(--c-vert); }
+.pastille.orange { color: var(--c-orange); }
+.pastille.rouge { color: var(--c-rouge); }
+.pastille.neutre { color: var(--c-gris); }
+.nav-lien .pastille { padding: 1px 8px 1px 6px; font-size: 12px; }
+.nav-lien .pastille svg { width: 12px; height: 12px; }
+
+/* ---------- Panneau de synchronisation ---------- */
+.sync { margin: var(--e-2) 12px var(--e-3); padding: var(--e-2); border-radius: var(--r-2); }
+.sync-rail { display: grid; place-items: center; position: relative; width: 56px; height: 48px; margin: var(--e-2) 12px; border-radius: 14px; border: 1px solid var(--verre-bord); color: var(--c-texte); background: rgba(0, 0, 0, .4); }
+.sync-rail .point-etat { position: absolute; top: 9px; right: 11px; }
+.sync-entete { display: flex; align-items: center; justify-content: space-between; gap: var(--e-1); }
+.sync-entete .titre { display: flex; align-items: center; gap: var(--e-1); color: var(--c-principale); font-size: 14px; }
+.interrupteur {
+  position: relative; width: 44px; height: 24px; flex: none; padding: 0; border-radius: var(--r-rond); cursor: pointer;
+  border: 1px solid rgba(255, 255, 255, 0.18); background: #3a3a3a; transition: background var(--duree), border-color var(--duree);
+}
+.interrupteur::after {
+  content: ""; position: absolute; top: 2px; left: 2px; width: 18px; height: 18px; border-radius: 50%;
+  background: #000; box-shadow: 0 1px 3px rgba(0, 0, 0, .6), 0 0 0 1px rgba(255, 255, 255, .25) inset; transition: transform 200ms var(--courbe), background 200ms;
+}
+.interrupteur[aria-checked="true"] { background: var(--c-principale); border-color: var(--c-principale); }
+.interrupteur[aria-checked="true"]::after { transform: translateX(20px); background: #000; }
+.interrupteur[aria-checked="false"]::after { background: #d9d9d9; }
+.etat { display: flex; align-items: flex-start; gap: var(--e-1); margin-top: 12px; font-size: 14px; color: var(--c-principale-douce); }
+.etat .mot { color: var(--c-principale); }
+.point-etat { width: 10px; height: 10px; border-radius: 50%; flex: none; margin-top: 6px; background: var(--c-gris); }
+.point-etat.ok { background: var(--c-vert); box-shadow: 0 0 0 0 rgba(69, 196, 134, .6); animation: pulse 2.4s ease-out infinite; }
+.point-etat.pause { background: var(--c-gris); }
+.point-etat.lecture { background: var(--c-bleu); }
+.point-etat.reconnexion { background: var(--c-orange); }
+.point-etat.erreur { background: var(--c-rouge); }
+.point-etat.aucun { background: transparent; border: 1px solid var(--c-gris); }
+@keyframes pulse { 0% { box-shadow: 0 0 0 0 rgba(69, 196, 134, .55); } 70% { box-shadow: 0 0 0 8px rgba(69, 196, 134, 0); } 100% { box-shadow: 0 0 0 0 rgba(69, 196, 134, 0); } }
+.sync-infos { margin: 12px 0 0; display: grid; grid-template-columns: auto 1fr; gap: 2px 12px; font-size: 13px; }
+.sync-infos dt { color: var(--c-texte-doux); }
+.sync-infos dd { margin: 0; color: var(--c-principale-douce); min-width: 0; overflow-wrap: anywhere; }
+.sync-raison { margin-top: 8px; font-size: 13px; color: var(--c-principale-douce); }
+.sync-actions { display: grid; gap: var(--e-1); margin-top: 12px; }
+.sync-note { margin-top: var(--e-1); font-size: 12px; color: var(--c-texte-doux); }
+
+/* ---------- Boutons premium ---------- */
+.bouton {
+  display: inline-flex; align-items: center; justify-content: center; gap: var(--e-1); min-height: 44px; padding: 0 var(--e-3);
+  border-radius: var(--r-rond); border: 1px solid var(--verre-bord); background: rgba(255, 255, 255, 0.03); color: var(--c-principale);
+  font-size: 14px; letter-spacing: 0.02em; cursor: pointer; text-decoration: none; white-space: nowrap;
+  transition: transform var(--duree) var(--courbe), background var(--duree), border-color var(--duree), box-shadow var(--duree);
+}
+.bouton:hover { background: rgba(255, 255, 255, 0.07); border-color: rgba(255, 255, 255, 0.22); transform: translateY(-1px); }
+.bouton:active { transform: translateY(0); }
+.bouton.principal {
+  color: #000; border-color: var(--c-accent);
+  background: linear-gradient(180deg, #F3C64A, var(--c-accent) 55%, #B98B14);
+  box-shadow: 0 1px 0 rgba(255, 255, 255, .5) inset, 0 10px 28px rgba(224, 174, 40, 0.22);
+}
+.bouton.principal:hover { box-shadow: 0 1px 0 rgba(255, 255, 255, .6) inset, 0 14px 36px rgba(224, 174, 40, 0.32); }
+.bouton.petit { min-height: 36px; padding: 0 var(--e-2); font-size: 13px; }
+.bouton.discret { border-color: transparent; background: transparent; color: var(--c-texte-doux); }
+.bouton.discret:hover { color: var(--c-texte); background: rgba(255, 255, 255, .04); }
+.bouton.plein { width: 100%; }
+.bouton .icone { width: 18px; height: 18px; }
+
+/* ---------- Fil d'Ariane ---------- */
+.ariane ol { list-style: none; display: flex; flex-wrap: wrap; align-items: center; gap: 4px var(--e-1); margin: 0; padding: 0; font-size: var(--t-legende); }
+.ariane li { display: inline-flex; align-items: center; gap: var(--e-1); color: var(--c-texte-doux); }
+.ariane li + li::before { content: "→"; color: rgba(224, 174, 40, .5); }
+.ariane a { text-decoration: none; color: var(--c-texte); border-bottom: 1px solid rgba(224, 174, 40, .3); }
+.ariane a:hover { border-bottom-color: var(--c-texte); }
+.ariane [aria-current="page"] { color: var(--c-principale); }
+
+/* ---------- Héros : la réponse principale, en grand ---------- */
+.heros { padding: var(--e-5); border-radius: 32px; box-shadow: var(--ombre-2); }
+.heros h1 { max-width: 22ch; margin-top: var(--e-2); }
+.heros .message { margin-top: var(--e-3); max-width: 72ch; font-size: 18px; color: var(--c-texte); }
+.heros .reponse { display: flex; flex-wrap: wrap; align-items: flex-end; gap: var(--e-2) var(--e-5); margin-top: var(--e-4); }
+.heros .reponse .bloc { min-width: 0; }
+.heros .reponse .valeur { font-size: var(--t-cle); line-height: 1; }
+.heros .reponse .valeur .unite { font-size: 0.32em; margin-left: 0.2em; }
+.heros .fleche { font-family: var(--police-titre); font-size: 40px; color: var(--c-accent); padding-bottom: 14px; }
+.heros .etiquette { font-size: var(--t-legende); color: var(--c-texte-doux); margin-bottom: var(--e-1); letter-spacing: 0.08em; text-transform: uppercase; }
+.heros .pied { display: flex; flex-wrap: wrap; gap: var(--e-1) var(--e-2); align-items: center; margin-top: var(--e-4); }
+
+/* ---------- Tuiles des flux ---------- */
+.grille-flux { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: var(--e-2); }
+.tuile { padding: var(--e-3); border-radius: var(--r-3); min-width: 0; transition: transform var(--duree) var(--courbe), border-color var(--duree); }
+.tuile:hover { transform: translateY(-3px); border-color: rgba(255, 255, 255, .18); }
+.tuile .code { font-family: var(--police-titre); font-size: var(--t-legende); color: var(--c-accent); letter-spacing: .1em; }
+.tuile .nom { margin-top: 4px; font-size: 14px; color: var(--c-texte); min-height: 2.6em; }
+.tuile .valeur { margin-top: var(--e-2); font-size: 40px; line-height: 1.05; overflow-wrap: anywhere; }
+.tuile .valeur .unite { font-size: 15px; margin-left: 6px; }
+.tuile.total { border-color: rgba(255, 255, 255, 0.2); }
+
+/* ---------- Cartes KPI très grand format ---------- */
+.grille-kpi { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: var(--e-3); }
+.carte-kpi { padding: var(--e-4); border-radius: 28px; min-width: 0; display: flex; flex-direction: column; gap: var(--e-2); transition: transform var(--duree) var(--courbe), border-color var(--duree), box-shadow 600ms; }
+.carte-kpi:hover, .carte-kpi:focus-within { z-index: 5; }
+.carte-kpi:hover { transform: translateY(-4px); border-color: rgba(255, 255, 255, 0.18); box-shadow: var(--ombre-2); }
+.carte-kpi .tete { display: flex; align-items: flex-start; justify-content: space-between; gap: var(--e-2); }
+.carte-kpi .tete h3 { font-size: 18px; }
+.carte-kpi .tete h3 a { text-decoration: none; }
+.carte-kpi .tete h3 a:hover { text-decoration: underline; text-decoration-color: rgba(255, 255, 255, .3); text-underline-offset: 4px; }
+.carte-kpi .tete .code { display: block; font-family: var(--police-titre); font-size: var(--t-legende); color: var(--c-accent); letter-spacing: .12em; margin-bottom: 4px; }
+.carte-kpi .actions-tete { display: flex; align-items: center; gap: var(--e-1); flex: none; }
+.carte-kpi .valeur { font-size: var(--t-cle); line-height: 1; overflow-wrap: anywhere; margin-top: var(--e-1); }
+.carte-kpi .valeur .unite { font-size: 0.3em; margin-left: 0.18em; white-space: nowrap; }
+.carte-kpi .compare { display: flex; flex-wrap: wrap; gap: var(--e-1) var(--e-4); font-size: 15px; }
+.carte-kpi .compare .num { color: var(--c-principale); }
+.carte-kpi .compare .var { font-family: var(--police-titre); color: var(--c-accent); }
+.carte-kpi .compare .etq { color: var(--c-texte-doux); margin-right: 6px; }
+.carte-kpi .pied { display: flex; align-items: center; justify-content: space-between; gap: var(--e-2); margin-top: auto; }
+.carte-kpi.eclat { border-color: var(--c-accent); box-shadow: 0 0 0 1px var(--c-accent), 0 0 48px rgba(224, 174, 40, 0.35); }
+.tuile.eclat { border-color: var(--c-accent); box-shadow: 0 0 0 1px var(--c-accent), 0 0 36px rgba(224, 174, 40, 0.3); }
+.sparkline { width: 132px; height: 34px; display: block; }
+.sparkline .ligne { fill: none; stroke: var(--c-accent); stroke-width: 1.25; vector-effect: non-scaling-stroke; }
+.sparkline .point { fill: var(--c-accent); }
+.sparkline-legende { font-size: 12px; color: var(--c-texte-doux); }
+
+/* ---------- Infobulle (formule du KPI) ---------- */
+.info { position: relative; display: inline-grid; place-items: center; width: 32px; height: 32px; border-radius: 50%; border: 1px solid var(--verre-bord); background: rgba(0, 0, 0, 0.4); color: var(--c-texte); cursor: help; padding: 0; }
+.info svg { width: 16px; height: 16px; }
+.bulle {
+  position: absolute; z-index: 30; right: 0; top: calc(100% + 10px); width: min(320px, 78vw); padding: 12px 14px; border-radius: 14px;
+  background: rgba(8, 8, 8, 0.96); border: 1px solid rgba(255, 255, 255, 0.16); box-shadow: var(--ombre-2);
+  color: var(--c-principale); font-size: 13px; line-height: 1.5; text-align: left; font-family: var(--police-texte); font-weight: 300;
+  opacity: 0; visibility: hidden; transform: translateY(-4px); transition: opacity 150ms, transform 150ms, visibility 150ms; pointer-events: none;
+}
+.bulle strong { display: block; color: var(--c-accent); font-weight: 300; letter-spacing: .08em; text-transform: uppercase; font-size: 11px; margin-bottom: 4px; }
+.info:hover .bulle, .info:focus-visible .bulle, .info[aria-expanded="true"] .bulle { opacity: 1; visibility: visible; transform: none; }
+.avec-bulle { position: relative; }
+.avec-bulle .bulle { left: calc(100% + 12px); right: auto; top: 50%; transform: translateY(-50%); }
+.avec-bulle:hover .bulle, .avec-bulle:focus-visible .bulle, .avec-bulle:focus-within .bulle { opacity: 1; visibility: visible; }
+
+/* ---------- Panneaux de graphiques ---------- */
+.panneau { padding: var(--e-4); border-radius: 28px; min-width: 0; }
+.panneau .entete { display: flex; justify-content: space-between; align-items: flex-start; gap: var(--e-2); margin-bottom: var(--e-2); flex-wrap: wrap; }
+.panneau .entete p { font-size: var(--t-legende); color: var(--c-texte-doux); max-width: 60ch; margin-top: 4px; }
+.graphique { width: 100%; height: 380px; min-width: 0; }
+.graphique.haut { height: 460px; }
+.graphique.jauge { height: 220px; }
+.grille-2 { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: var(--e-3); }
+.grille-jauges { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: var(--e-2); }
+.jauge-bloc { text-align: center; min-width: 0; }
+.jauge-bloc h3 { font-family: var(--police-texte); font-weight: 300; font-size: 14px; color: var(--c-texte); letter-spacing: 0; min-height: 2.8em; display: flex; align-items: flex-end; justify-content: center; }
+.jauge-bloc .sous { margin-top: 4px; font-size: var(--t-legende); color: var(--c-texte-doux); }
+.jauge-bloc .sous .num { color: var(--c-principale); }
+.jauge-bloc .pastille { margin-top: var(--e-1); }
+.legende-couleurs { display: flex; flex-wrap: wrap; gap: var(--e-1) var(--e-3); font-size: var(--t-legende); color: var(--c-texte-doux); margin-top: var(--e-2); }
+.legende-couleurs span { display: inline-flex; align-items: center; gap: var(--e-1); }
+.legende-couleurs i { width: 12px; height: 12px; border-radius: 3px; display: inline-block; }
+.vide-graphique { display: grid; place-items: center; min-height: 200px; text-align: center; color: var(--c-texte-doux); font-size: 14px; padding: var(--e-3); border: 1px dashed rgba(255, 255, 255, .12); border-radius: var(--r-2); }
+
+/* ---------- Recommandations ---------- */
+.recos { list-style: none; counter-reset: reco; margin: 0; padding: 0; display: grid; gap: var(--e-2); }
+.recos li { counter-increment: reco; display: grid; grid-template-columns: 48px 1fr; gap: var(--e-2); align-items: start; padding: var(--e-3); border-radius: var(--r-3); }
+.recos li .numero { font-family: var(--police-titre); font-size: 28px; color: var(--c-accent); line-height: 1; text-align: center; padding-top: 2px; }
+.recos p { color: var(--c-principale); }
+.note-recos { margin-top: var(--e-2); font-size: var(--t-legende); color: var(--c-texte-doux); }
+
+/* ---------- Tableau premium du TFT ---------- */
+.tableau-cadre { overflow-x: auto; border-radius: var(--r-2); border: 1px solid var(--verre-bord); }
+table.tft { width: 100%; border-collapse: collapse; font-size: 15px; min-width: 0; }
+table.tft caption { text-align: left; padding: 0 0 var(--e-2); color: var(--c-texte-doux); font-size: var(--t-legende); }
+table.tft th, table.tft td { padding: 10px 16px; border-bottom: 1px solid rgba(255, 255, 255, 0.06); vertical-align: top; }
+table.tft thead th { position: sticky; top: 0; background: rgba(10, 10, 10, .96); font-weight: 300; color: var(--c-texte-doux); font-size: var(--t-legende); letter-spacing: .1em; text-transform: uppercase; text-align: left; }
+table.tft th.montant, table.tft td.montant { text-align: right; white-space: nowrap; font-family: var(--police-titre); font-variant-numeric: tabular-nums; color: var(--c-principale); width: 9.5em; }
+table.tft thead th.montant { font-family: var(--police-texte); }
+table.tft td.code { font-family: var(--police-titre); color: var(--c-accent); width: 4em; white-space: nowrap; font-size: 13px; }
+table.tft .libelle { color: var(--c-texte); text-align: left; font-weight: 300; }
+table.tft tr.retrait .libelle { padding-left: 36px; }
+table.tft tr.section td { padding-top: 18px; font-size: 12px; letter-spacing: .14em; text-transform: uppercase; color: var(--c-texte-doux); border-bottom-color: rgba(255, 255, 255, .1); }
+table.tft tr.sous-section td { font-style: italic; color: var(--c-texte-doux); font-size: 14px; }
+table.tft tr.sous-total td { color: var(--c-principale); }
+table.tft tr.total td { font-weight: 400; color: var(--c-principale); background: rgba(255, 255, 255, 0.035); border-top: 1px solid rgba(255, 255, 255, .16); }
+table.tft tr.total .libelle, table.tft tr.total td.code { font-family: var(--police-titre); font-size: 14px; letter-spacing: .04em; }
+table.tft tr.total .libelle { color: var(--c-principale); font-weight: 700; }
+table.tft tr.total th, table.tft tr.total td { font-weight: 700; color: var(--c-principale); background: rgba(255, 255, 255, 0.035); border-top: 1px solid rgba(255, 255, 255, .16); }
+table.tft tr.total td.montant { font-weight: 700; }
+table.tft tbody tr:hover td { background: rgba(255, 255, 255, 0.025); }
+
+/* ---------- Pages famille et KPI ---------- */
+.tete-page { display: flex; flex-direction: column; gap: var(--e-2); }
+.tete-page .ligne { display: flex; align-items: center; gap: var(--e-2); flex-wrap: wrap; }
+.tete-page .intro { color: var(--c-texte); max-width: 72ch; }
+.grille-familles { display: grid; grid-template-columns: repeat(auto-fill, minmax(min(300px, 100%), 1fr)); gap: var(--e-3); }
+.carte-famille { display: flex; flex-direction: column; gap: var(--e-2); padding: var(--e-3); border-radius: var(--r-3); text-decoration: none; transition: transform var(--duree) var(--courbe), border-color var(--duree); }
+.carte-famille:hover { transform: translateY(-4px); border-color: rgba(255, 255, 255, .2); }
+.carte-famille .haut { display: flex; justify-content: space-between; align-items: center; gap: var(--e-1); }
+.carte-famille .haut > svg { width: 28px; height: 28px; color: var(--c-accent); }
+.carte-famille ul { list-style: none; margin: 0; padding: 0; display: grid; gap: 6px; font-size: 14px; }
+.carte-famille li { display: flex; justify-content: space-between; gap: var(--e-1); }
+.carte-famille li .num { white-space: nowrap; }
+.detail-kpi { display: grid; grid-template-columns: minmax(0, 1.2fr) minmax(0, 1fr); gap: var(--e-3); align-items: start; }
+.dico { padding: var(--e-4); border-radius: 28px; display: grid; gap: var(--e-3); }
+.dico dl { margin: 0; display: grid; gap: var(--e-2); }
+.dico dt { font-size: var(--t-legende); letter-spacing: .12em; text-transform: uppercase; color: var(--c-texte-doux); }
+.dico dd { margin: 4px 0 0; color: var(--c-principale); }
+.seuils { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: var(--e-1); }
+.seuil { padding: 12px; border-radius: 14px; border: 1px solid var(--verre-bord); background: rgba(0, 0, 0, 0.35); min-width: 0; }
+.seuil .pastille { margin-bottom: 6px; }
+.seuil .texte { color: var(--c-principale); font-family: var(--police-titre); overflow-wrap: anywhere; }
+.feux-annees { display: flex; flex-wrap: wrap; gap: var(--e-2); align-items: center; }
+.feux-annees span.etq { font-size: var(--t-legende); color: var(--c-texte-doux); margin-right: 6px; }
+.verification { font-size: var(--t-legende); color: var(--c-texte-doux); display: flex; gap: var(--e-1); align-items: center; flex-wrap: wrap; }
+.verification .pastille { font-size: 12px; }
+
+/* ---------- États : chargement, vide, erreur, succès ---------- */
+.squelette { position: relative; overflow: hidden; background: rgba(255, 255, 255, 0.035); border-radius: var(--r-3); border: 1px solid rgba(255, 255, 255, 0.06); }
+.squelette::after { content: ""; position: absolute; inset: 0; transform: translateX(-100%); background: linear-gradient(90deg, rgba(255, 255, 255, 0), rgba(255, 255, 255, 0.06), rgba(255, 255, 255, 0)); animation: miroir 1.6s ease-in-out infinite; }
+@keyframes miroir { 100% { transform: translateX(100%); } }
+.etat-vide, .etat-erreur { padding: var(--e-6) var(--e-5); border-radius: 32px; text-align: center; display: grid; justify-items: center; gap: var(--e-2); }
+.etat-vide h1, .etat-erreur h1 { max-width: 20ch; }
+.etat-vide p, .etat-erreur p { max-width: 60ch; color: var(--c-texte); }
+.zone-depot { margin-top: var(--e-2); width: min(560px, 100%); padding: var(--e-4); border-radius: var(--r-3); border: 1px dashed rgba(224, 174, 40, 0.45); color: var(--c-texte-doux); cursor: pointer; background: rgba(0, 0, 0, .3); transition: border-color var(--duree), background var(--duree); }
+.zone-depot:hover, .zone-depot.survol { border-color: var(--c-accent); background: rgba(224, 174, 40, 0.05); color: var(--c-texte); }
+.depot-global { position: fixed; inset: 0; z-index: 150; display: none; place-items: center; background: rgba(0, 0, 0, 0.75); -webkit-backdrop-filter: blur(6px); backdrop-filter: blur(6px); }
+.depot-global.visible { display: grid; }
+.depot-global div { padding: var(--e-6); border: 1px dashed var(--c-accent); border-radius: 32px; color: var(--c-principale); font-family: var(--police-titre); font-size: var(--t-sous-titre); text-align: center; }
+.mode-c { padding: var(--e-2) var(--e-3); border-radius: var(--r-2); border: 1px solid rgba(108, 180, 245, .35); color: var(--c-principale); font-size: 14px; max-width: 62ch; }
+
+/* ---------- Alertes et disjoncteur ---------- */
+.alerte { padding: var(--e-3); border-radius: var(--r-3); border-color: rgba(240, 86, 107, 0.5); }
+.alerte.avertissement { border-color: rgba(240, 145, 58, 0.5); }
+.alerte .haut { display: flex; justify-content: space-between; gap: var(--e-2); align-items: flex-start; }
+.alerte h2 { font-size: 18px; display: flex; gap: var(--e-1); align-items: center; }
+.alerte h2 svg { color: var(--c-rouge); width: 22px; height: 22px; }
+.alerte.avertissement h2 svg { color: var(--c-orange); }
+.alerte ul { margin: var(--e-2) 0 0; padding-left: 20px; color: var(--c-principale); }
+.alerte li + li { margin-top: 4px; }
+.disjoncteur { padding: var(--e-6) var(--e-5); border-radius: 32px; border-color: rgba(240, 86, 107, .6); text-align: center; display: grid; gap: var(--e-2); justify-items: center; }
+.disjoncteur svg.grand { width: 56px; height: 56px; color: var(--c-rouge); }
+
+/* ---------- Toasts ---------- */
+.toasts { position: fixed; z-index: 120; right: var(--e-3); bottom: var(--e-3); display: grid; gap: var(--e-1); width: min(420px, calc(100vw - 32px)); pointer-events: none; }
+.toast { pointer-events: auto; display: flex; gap: 12px; align-items: flex-start; padding: 14px 16px; border-radius: var(--r-2); color: var(--c-principale); font-size: 14px; animation: entree 260ms var(--courbe); }
+.toast svg { color: var(--c-accent); margin-top: 1px; }
+.toast.erreur svg { color: var(--c-rouge); }
+@keyframes entree { from { opacity: 0; transform: translateY(8px); } to { opacity: 1; transform: none; } }
+
+/* ---------- Pied de page ---------- */
+.pied-page { font-size: var(--t-legende); color: var(--c-texte-doux); display: grid; gap: 6px; padding-top: var(--e-3); border-top: 1px solid rgba(255, 255, 255, 0.06); }
+
+/* ---------- Téléphone : bande compacte, onglets en bas, volet ---------- */
+.bande-mobile, .onglets-bas { display: none; }
+.volet-fond { position: fixed; inset: 0; z-index: 90; background: rgba(0, 0, 0, .6); display: none; }
+.volet-fond.visible { display: block; }
+.volet {
+  position: fixed; z-index: 95; left: 0; right: 0; bottom: 0; max-height: 82vh; overflow: auto; padding: var(--e-3) var(--e-2) calc(var(--e-4) + env(safe-area-inset-bottom));
+  border-radius: 28px 28px 0 0; transform: translateY(105%); transition: transform 260ms var(--courbe); visibility: hidden;
+}
+.volet.visible { transform: none; visibility: visible; }
+.volet .haut { display: flex; justify-content: space-between; align-items: center; margin-bottom: var(--e-2); }
+.volet .nav-sous { padding-left: 44px; }
+.volet .nav-lien, .volet .nav-famille { margin-left: 0; margin-right: 0; }
+.bouton-icone { width: 44px; height: 44px; display: grid; place-items: center; border-radius: 50%; border: 1px solid var(--verre-bord); background: rgba(0, 0, 0, .4); color: var(--c-texte); cursor: pointer; padding: 0; flex: none; }
+
+@media (max-width: 1100px) {
+  .grille-jauges { grid-template-columns: repeat(3, minmax(0, 1fr)); }
+  .detail-kpi { grid-template-columns: minmax(0, 1fr); }
+}
+@media (max-width: 899px) {
+  .menu { display: none; }
+  .contenu { margin-left: 0; padding: var(--e-3) var(--e-2) calc(var(--e-12) + 24px); }
+  .bande-mobile {
+    display: flex; position: sticky; top: 0; z-index: 70; align-items: center; gap: 12px; padding: 10px var(--e-2) 10px;
+    padding-top: calc(10px + env(safe-area-inset-top)); border-radius: 0 0 20px 20px; border-top: 0;
+  }
+  .bande-mobile .etat { margin: 0; flex: 1; min-width: 0; font-size: 13px; }
+  .bande-mobile .etat .texte { white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+  .bande-mobile .point-etat { margin-top: 4px; }
+  .onglets-bas {
+    display: grid; grid-template-columns: 1fr 1fr; position: fixed; z-index: 80; left: 12px; right: 12px; bottom: calc(12px + env(safe-area-inset-bottom));
+    padding: 6px; border-radius: 24px;
+  }
+  .onglets-bas a, .onglets-bas button { display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 2px; min-height: 56px; border-radius: 18px; text-decoration: none; border: 0; background: transparent; color: var(--c-texte-doux); font-size: 12px; cursor: pointer; }
+  .onglets-bas [aria-current="page"] { color: var(--c-principale); background: rgba(255, 255, 255, 0.07); }
+  .grille-flux { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+  .grille-2 { grid-template-columns: minmax(0, 1fr); }
+  .toasts { bottom: calc(96px + env(safe-area-inset-bottom)); right: 16px; }
+  .heros { padding: var(--e-3); border-radius: 28px; }
+}
+@media (max-width: 639px) {
+  .grille-kpi { grid-template-columns: minmax(0, 1fr); }
+  .grille-flux { grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 12px; }
+  .tuile { padding: var(--e-2); border-radius: var(--r-2); }
+  .tuile .valeur { font-size: 26px; }
+  .tuile .valeur .unite { font-size: 12px; margin-left: 4px; }
+  .heros .fleche { display: none; }
+  .grille-jauges { grid-template-columns: minmax(0, 1fr); }
+  .carte-kpi, .panneau, .dico { padding: var(--e-3); border-radius: var(--r-3); }
+  .seuils { grid-template-columns: minmax(0, 1fr); }
+  .graphique { height: 340px; }
+  .graphique.haut { height: 520px; }
+  .etat-vide, .etat-erreur, .disjoncteur { padding: var(--e-4) var(--e-2); }
+  table.tft { font-size: 13px; }
+  table.tft th, table.tft td { padding: 8px 8px; }
+  table.tft td.montant, table.tft th.montant { width: auto; }
+  table.tft tr.retrait .libelle { padding-left: 16px; }
+  .recos li { grid-template-columns: 32px 1fr; padding: var(--e-2); }
+}
+
+/* ---------- Réduire les animations ---------- */
+@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after { animation: none !important; transition: none !important; scroll-behavior: auto !important; }
+}
+@media (max-width: 899px), (pointer: coarse) {
+  .fond .reflets, .fond .lustre { animation: none; }
+}
+@media print {
+  .fond, .menu, .bande-mobile, .onglets-bas, .toasts { display: none !important; }
+  .contenu { margin: 0; }
+}
+</style>
+</head>
+<body>
+<a class="lien-evitement" href="#contenu">Aller au contenu</a>
+<div class="fond" aria-hidden="true"><div class="reflets"></div><div class="lustre"></div><canvas id="particules"></canvas></div>
+<div class="app">
+  <nav class="menu" id="menu" aria-label="Menu principal"></nav>
+  <header class="bande-mobile verre" id="bande-mobile" aria-label="Synchronisation"></header>
+  <main class="contenu" id="contenu" tabindex="-1"></main>
+  <nav class="onglets-bas verre" id="onglets-bas" aria-label="Écrans"></nav>
+</div>
+<div class="volet-fond" id="volet-fond"></div>
+<div class="volet verre" id="volet" role="dialog" aria-modal="true" aria-labelledby="volet-titre"></div>
+<div class="depot-global" id="depot-global" aria-hidden="true"><div>Déposez votre fichier Excel</div></div>
+<div class="toasts" id="toasts" role="status" aria-live="polite" aria-atomic="false"></div>
+<input type="file" id="entree-fichier" class="visuellement-cache" accept=".xlsx,.xlsm,.xls,.csv" tabindex="-1" aria-hidden="true">
+<!-- Bibliothèques autorisées, version exacte dans l'adresse (voir le rapport pour l'empreinte SRI) -->
+<script src="https://cdn.sheetjs.com/xlsx-0.20.3/package/dist/xlsx.full.min.js" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/echarts/5.6.0/echarts.min.js" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+<script>
+"use strict";
+/* =====================================================================
+   ATLAS DISTRIBUTION SA · Situation TFT 2027 (IAS 7) · application 100 % navigateur
+   Sections : Configuration · Sécurité · Lecture des données · Synchronisation ·
+              Calculs · Affichage · Graphiques · Démarrage
+   ===================================================================== */
+
+/* =====================================================================
+   1. CONFIGURATION
+   ===================================================================== */
+
+/* Le contrat de format : toute la lecture et la validation passent par lui. */
+const FORMAT_ATTENDU = Object.freeze({
+  annees: Object.freeze({ n: 2027, n1: 2026 }),
+  fichierEnLigne: "donnees.xlsx",
+  tailleMaxOctets: 10 * 1024 * 1024,
+  lignesMax: 50000,
+  extensions: Object.freeze([".xlsx", ".xlsm", ".xls", ".csv"]),
+  colonnesInterdites: Object.freeze(["__proto__", "constructor", "prototype"]),
+  onglets: Object.freeze({
+    lisezMoi: { nom: "LISEZ-MOI", synonymes: ["LISEZ MOI", "LISEZMOI", "LIRE MOI", "README"], obligatoire: true },
+    input: { nom: "INPUT", synonymes: ["DONNEES", "SAISIE"], obligatoire: false },
+    retraitementsIfrs: { nom: "RETRAITEMENTS-IFRS", synonymes: ["RETRAITEMENTS IFRS", "RETRAITEMENT IFRS"], obligatoire: false },
+    retraitementsTft: { nom: "RETRAITEMENTS-TFT", synonymes: ["RETRAITEMENTS TFT"], obligatoire: false },
+    tft: { nom: "TFT", synonymes: ["TABLEAU DES FLUX", "TABLEAU DES FLUX DE TRESORERIE"], obligatoire: true },
+    dettes: { nom: "DETTES-FINANCEMENT", synonymes: ["DETTES FINANCEMENT"], obligatoire: false },
+    pont: { nom: "PONT-CGNC", synonymes: ["PONT CGNC"], obligatoire: false },
+    kpi: { nom: "KPI", synonymes: ["INDICATEURS", "KPIS"], obligatoire: true },
+    dashboard: { nom: "DASHBOARD", synonymes: ["TABLEAU DE BORD"], obligatoire: false },
+    controles: { nom: "CONTROLES", synonymes: ["CONTRÔLES", "CONTROLE", "CONTRÔLE"], obligatoire: true },
+    journal: { nom: "JOURNAL", synonymes: ["JOURNAL D'EXECUTION"], obligatoire: false }
+  }),
+  /* Noms définis : nom, onglet attendu, type */
+  nomsDefinis: Object.freeze([
+    ...["OT", "IT", "FT", "V", "T0", "T1"].flatMap(c => [2027, 2026].map(a => ({ nom: "TFT_" + c + "_" + a, onglet: "TFT", type: "nombre" }))),
+    ...["CONV", "OT_RN", "FCF", "FCF_LOY", "CAPEX", "DSO", "DIO", "DPO", "CCC", "DN", "LEV", "LEV_X16", "DSCR", "DIV"]
+      .flatMap(c => [2027, 2026].map(a => ({ nom: "KPI_" + c + "_" + a, onglet: "KPI", type: "nombre" }))),
+    ...["TVA", "JOURS", "PLAFOND", "MOIS_EQ", "CIBLE_CONV", "CIBLE_DSCR", "CIBLE_DIV", "CIBLE_LEV", "CIBLE_CCC", "CIBLE_CAPEX",
+      "MAX_CONV", "MAX_LEV", "MAX_DSCR"].map(c => ({ nom: "PARAM_" + c, onglet: "KPI", type: "nombre" })),
+    { nom: "STATUT_GLOBAL", onglet: "CONTROLES", type: "texte" }
+  ]),
+  /* Onglet TFT : codes de ligne en colonne B, colonnes 2027 et 2026 */
+  tft: Object.freeze({
+    onglet: "tft",
+    enTetes: { code: ["Ligne", "Code", "N°"], libelle: ["Libellé", "Libelle", "Intitulé", "Poste"], n: ["2027", "Exercice 2027", "N"], n1: ["2026", "Exercice 2026", "N-1"], note: ["Note", "Notes", "Référence"] },
+    codes: ["O1", "O2", "O3", "O4", "O5", "O6", "O7", "O8", "O9", "O10", "O11", "O12", "OS", "O13", "OT",
+      "I1", "I2", "I3", "IT", "F1", "F2", "F3", "F4", "F5", "F6", "FT", "V", "T0", "T1"],
+    totaux: ["OT", "IT", "FT", "V", "T0", "T1"],
+    sousTotaux: ["OS"],
+    dernierCode: "T1"
+  }),
+  /* Onglet KPI, section 1 : codes K01 à K14 en colonne B */
+  kpi: Object.freeze({
+    onglet: "kpi",
+    enTetes: { code: ["N°", "No", "Numéro", "Code"], libelle: ["KPI", "Indicateur"], n: ["2027"], n1: ["2026"], variation: ["Variation", "Écart"], feuN: ["Feu 2027"], feuN1: ["Feu 2026"], nom: ["Nom défini · unité", "Nom défini", "Nom"] },
+    codes: ["K01", "K02", "K03", "K04", "K05", "K06", "K07", "K08", "K09", "K10", "K11", "K12", "K13", "K14"],
+    noms: { K01: "CONV", K02: "OT_RN", K03: "FCF", K04: "FCF_LOY", K05: "CAPEX", K06: "DSO", K07: "DIO", K08: "DPO", K09: "CCC", K10: "DN", K11: "LEV", K12: "LEV_X16", K13: "DSCR", K14: "DIV" }
+  }),
+  dictionnaire: Object.freeze({ enTetes: { code: ["N°", "Code"], definition: ["Définition"], unite: ["Unité"], vert: ["Vert"], orange: ["Ambre", "Orange"], rouge: ["Rouge"], pourquoi: ["Pourquoi il compte", "Pourquoi"] } }),
+  seuils: Object.freeze({ enTetes: { code: ["N°", "Code"], sens: ["Sens"], vert: ["Seuil vert"], orange: ["Seuil ambre", "Seuil orange"] } }),
+  radar: Object.freeze({ enTetes: { axe: ["Radar · axe", "Radar axe", "Radar"], n: ["Valeur 2027"], n1: ["Valeur 2026"], cible: ["Cible"], scoreN: ["Score 2027"], scoreN1: ["Score 2026"], sens: ["Sens"] } }),
+  entonnoir: Object.freeze({ enTetes: { etape: ["Entonnoir · étape (2027)", "Entonnoir · étape", "Entonnoir"], valeur: ["Valeur"] } }),
+  cascade: Object.freeze({ enTetes: { barre: ["Cascade · barre", "Cascade"], debut: ["Début", "Debut"], fin: ["Fin"] } }),
+  jauges: Object.freeze({ enTetes: { jauge: ["Jauge (2027)", "Jauge"], valeur: ["Valeur"], maximum: ["Maximum", "Max"], repere: ["Repère", "Repere"] } }),
+  bullet: Object.freeze({ enTetes: { poste: ["Poste du cycle de cash", "Poste"], valeur: ["Valeur 2027"], seuil: ["Seuil vert"] } }),
+  recos: Object.freeze({ reperes: ["La décision du DG", "Recommandations au DG"], note: ["Ces recommandations"] }),
+  controles: Object.freeze({ total: ["Nombre de contrôles"], conformes: ["Contrôles CONFORMES", "Contrôles conformes"] }),
+  lisezMoi: Object.freeze({ message: ["Le message principal", "Message principal"] }),
+  /* Onglet RETRAITEMENTS-IFRS (facultatif) : sert au recalcul indépendant des KPI */
+  bilan: Object.freeze({ codesBilan: ["A7", "A8", "L2", "L3", "L6"], codesResultat: ["RO", "RN", "CA", "AC"], enTeteN: ["IFRS 2027"], enTeteN1: ["IFRS 2026"] })
+});
+
+/* Les familles sont fixées ici ; noms, valeurs, feux et descriptions viennent du fichier. */
+const FAMILLES = Object.freeze([
+  { id: "qualite-du-cash", titre: "Qualité du cash", icone: "goutte", codes: ["K01", "K02"] },
+  { id: "cash-libre", titre: "Cash libre et investissements", icone: "pieces", codes: ["K03", "K04", "K05"] },
+  { id: "bfr", titre: "BFR et cycle de cash", icone: "cycle", codes: ["K06", "K07", "K08", "K09"] },
+  { id: "dette", titre: "Dette et solvabilité", icone: "banque", codes: ["K10", "K11", "K12", "K13"] },
+  { id: "actionnaires", titre: "Actionnaires", icone: "personnes", codes: ["K14"] }
+]);
+
+/* Les 6 cartes de l'onglet DASHBOARD (noms définis KPI_…_2027) */
+const CARTES_SITUATION = Object.freeze([
+  { code: "K01", titre: "Conversion en cash" },
+  { code: "K03", titre: "Free cash-flow" },
+  { code: "K09", titre: "Cycle de cash" },
+  { code: "K11", titre: "Dette nette ÷ EBITDA" },
+  { code: "K13", titre: "Couverture de la dette" },
+  { code: "K14", titre: "Couverture des dividendes" }
+]);
+
+/* Formules affichées dans les infobulles (une par KPI) */
+const FORMULES = Object.freeze({
+  K01: "Flux opérationnel (OT) ÷ EBITDA, avec EBITDA = résultat opérationnel (O1) + dotations aux amortissements (O2) + dépréciations (O3).",
+  K02: "Flux opérationnel (OT) ÷ résultat net IFRS.",
+  K03: "Flux opérationnel (OT) + acquisitions d'immobilisations (I1) + frais de développement immobilisés (I2).",
+  K04: "Free cash-flow avant loyers (K03) + principal (F4) et intérêts (F5) de la dette de location.",
+  K05: "Investissements payés (− I1 − I2) ÷ dotations aux amortissements (O2).",
+  K06: "Clients IFRS ÷ (chiffre d'affaires IFRS × (1 + TVA)) × 360.",
+  K07: "Stocks IFRS ÷ achats consommés IFRS × 360.",
+  K08: "Fournisseurs IFRS ÷ (achats consommés IFRS × (1 + TVA)) × 360.",
+  K09: "Délai clients (K06) + délai stocks (K07) − délai fournisseurs (K08).",
+  K10: "Emprunts bancaires (L2) + dette de location (L3) − trésorerie nette IAS 7 (T1).",
+  K11: "Dette nette (K10) ÷ EBITDA, avec IFRS 16.",
+  K12: "(Dette nette − dette de location) ÷ (EBITDA + F4 + F5), soit le levier lu sans IFRS 16.",
+  K13: "Flux opérationnel (OT) ÷ (remboursements F2 + intérêts F3 + loyers F4 et F5).",
+  K14: "Free cash-flow avant loyers (K03) ÷ dividendes versés (F6)."
+});
+
+const TFT_NOMS = Object.freeze({
+  OT: "Flux opérationnel", IT: "Flux d'investissement", FT: "Flux de financement",
+  V: "Variation de la trésorerie", T0: "Trésorerie nette à l'ouverture", T1: "Trésorerie nette à la clôture"
+});
+
+const REGLAGES = Object.freeze({
+  cleSynchro: "atlas-tft.synchronisation",
+  baseIdb: "atlas-tft", magasinIdb: "poignees", clePoignee: "fichier-connecte",
+  intervalleDirect: 2000, intervalleLocal: 3000, intervalleEnLigne: 60000,
+  attenteStabilite: 700, essaisLecture: 3, delaiEssais: 1000 / 3, dureeEclat: 2000
+});
+
+const ETATS_SYNC = Object.freeze({
+  ok: "Synchronisé", pause: "En pause", lecture: "Lecture en cours…",
+  reconnexion: "Reconnexion nécessaire", erreur: "Fichier illisible : dernières données conservées", aucun: "Aucun fichier connecté"
+});
+
+/* Icônes en SVG intégré (tracés écrits ici, jamais lus dans le fichier) */
+const ICONES = Object.freeze({
+  situation: ["M3 12h4l3-8 4 16 3-8h4"],
+  familles: ["M4 4h6v6H4z", "M14 4h6v6h-6z", "M4 14h6v6H4z", "M14 14h6v6h-6z"],
+  goutte: ["M12 3c3.5 4.2 6 7.6 6 10.5a6 6 0 0 1-12 0C6 10.6 8.5 7.2 12 3z"],
+  pieces: ["M12 2v20", "M17 6H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6"],
+  cycle: ["M21 12a9 9 0 0 1-15.5 6.2", "M3 12A9 9 0 0 1 18.5 5.8", "M18 2v4h-4", "M6 22v-4h4"],
+  banque: ["M3 10l9-6 9 6", "M5 10v8", "M9.5 10v8", "M14.5 10v8", "M19 10v8", "M3 21h18"],
+  personnes: ["M16 20v-1a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v1", "M9 11a4 4 0 1 0 0-8 4 4 0 0 0 0 8z", "M22 20v-1a4 4 0 0 0-3-3.9", "M16 3.1a4 4 0 0 1 0 7.8"],
+  sync: ["M20 11A8 8 0 0 0 6.3 6.3L4 8.5", "M4 4v4.5h4.5", "M4 13a8 8 0 0 0 13.7 4.7l2.3-2.2", "M20 20v-4.5h-4.5"],
+  fichier: ["M14 3H6a1 1 0 0 0-1 1v16a1 1 0 0 0 1 1h12a1 1 0 0 0 1-1V8z", "M14 3v5h5", "M8 13h8", "M8 17h5"],
+  importer: ["M12 3v12", "M7 10l5 5 5-5", "M4 21h16"],
+  exporter: ["M12 15V3", "M7 8l5-5 5 5", "M4 21h16"],
+  info: ["M12 22a10 10 0 1 0 0-20 10 10 0 0 0 0 20z", "M12 11v6", "M12 7.5v.01"],
+  chevron: ["M9 6l6 6-6 6"],
+  fermer: ["M6 6l12 12", "M18 6L6 18"],
+  menu: ["M4 7h16", "M4 12h16", "M4 17h16"],
+  check: ["M5 12.5l4.5 4.5L19 7"],
+  alerte: ["M12 3l10 18H2z", "M12 10v5", "M12 18v.01"],
+  croix: ["M7 7l10 10", "M17 7L7 17"],
+  tiret: ["M6 12h12"],
+  reessayer: ["M4 12a8 8 0 1 0 2.3-5.7L4 8.5", "M4 4v4.5h4.5"],
+  corbeille: ["M4 7h16", "M10 11v6", "M14 11v6", "M6 7l1 13h10l1-13", "M9 7V4h6v3"],
+  lien: ["M10 14a4 4 0 0 0 5.7 0l3-3a4 4 0 0 0-5.7-5.7l-1 1", "M14 10a4 4 0 0 0-5.7 0l-3 3a4 4 0 0 0 5.7 5.7l1-1"],
+  pause: ["M8 5v14", "M16 5v14"],
+  logo: ["M5 20L12 4l7 16", "M8.5 13h7"],
+  bouclier: ["M12 3l8 3v6c0 4.5-3.4 8.3-8 9-4.6-.7-8-4.5-8-9V6z", "M9 12l2 2 4-4"]
+});
+
+/* =====================================================================
+   2. SÉCURITÉ
+   ===================================================================== */
+
+/* Protection contre l'affichage du site dans une fausse page (iframe) */
+const estEncadre = (() => { try { return window.top !== window.self; } catch (e) { return true; } })();
+if (estEncadre) {
+  document.documentElement.classList.add("encadre");
+}
+document.documentElement.classList.remove("verrou");
+
+/* Erreur « métier » : son message est écrit pour l'utilisateur, sans détail technique */
+class ErreurLecture extends Error {
+  constructor(message, details, reessayable) { super(message); this.name = "ErreurLecture"; this.details = details || []; this.reessayable = !!reessayable; }
+}
+
+/* Contrôle du fichier avant toute lecture : extension, taille, signature binaire */
+function controlerFichierAvantLecture(nom, taille) {
+  const nomMin = String(nom || "").toLowerCase();
+  const ext = FORMAT_ATTENDU.extensions.find(e => nomMin.endsWith(e));
+  if (!ext) {
+    throw new ErreurLecture("Format refusé : seuls les fichiers .xlsx, .xlsm, .xls et .csv sont acceptés.");
+  }
+  if (taille > FORMAT_ATTENDU.tailleMaxOctets) {
+    throw new ErreurLecture("Fichier trop volumineux (" + formaterNombre(taille / 1048576, 1) + " Mo) : la limite est de 10 Mo.");
+  }
+  if (taille === 0) {
+    throw new ErreurLecture("Le fichier est vide ou en cours d'enregistrement.", [], true);
+  }
+  return ext;
+}
+
+function controlerSignature(ext, octets) {
+  const b = octets;
+  const zip = b.length > 4 && b[0] === 0x50 && b[1] === 0x4B && b[2] === 0x03 && b[3] === 0x04;
+  const ole = b.length > 8 && b[0] === 0xD0 && b[1] === 0xCF && b[2] === 0x11 && b[3] === 0xE0 && b[4] === 0xA1 && b[5] === 0xB1 && b[6] === 0x1A && b[7] === 0xE1;
+  if ((ext === ".xlsx" || ext === ".xlsm") && !zip) {
+    throw new ErreurLecture("Ce fichier porte l'extension " + ext + " mais ce n'est pas un vrai classeur Excel.");
+  }
+  if (ext === ".xls" && !ole) {
+    throw new ErreurLecture("Ce fichier porte l'extension .xls mais ce n'est pas un vrai classeur Excel.");
+  }
+  if (ext === ".csv") {
+    const n = Math.min(b.length, 8192);
+    for (let i = 0; i < n; i++) {
+      if (b[i] === 0) throw new ErreurLecture("Ce fichier porte l'extension .csv mais ce n'est pas un fichier texte.");
+    }
+  }
+}
+
+/* Protection des exports Excel contre les formules piégées */
+function neutraliserCellule(valeur) {
+  if (typeof valeur !== "string") return valeur;
+  return /^[=+\-−@\t\r\n]/.test(valeur) ? "'" + valeur : valeur;
+}
+
+/* Les noms de colonnes dangereux sont ignorés (pollution d'objets) */
+function estColonneInterdite(texte) {
+  const t = String(texte == null ? "" : texte).trim().toLowerCase();
+  return FORMAT_ATTENDU.colonnesInterdites.includes(t);
+}
+
+/* Création d'éléments sans jamais interpréter de HTML : textContent et createElement uniquement */
+function el(balise, attributs, enfants) {
+  const noeud = document.createElement(balise);
+  if (attributs) {
+    for (const cle of Object.keys(attributs)) {
+      const v = attributs[cle];
+      if (v === null || v === undefined || v === false) continue;
+      if (cle === "classe") noeud.className = v;
+      else if (cle === "texte") noeud.textContent = String(v);
+      else if (cle.startsWith("on") && typeof v === "function") noeud.addEventListener(cle.slice(2), v);
+      else if (cle === "dataset") { for (const d of Object.keys(v)) noeud.dataset[d] = v[d]; }
+      else noeud.setAttribute(cle, v === true ? "" : String(v));
+    }
+  }
+  ajouterEnfants(noeud, enfants);
+  return noeud;
+}
+function ajouterEnfants(noeud, enfants) {
+  if (enfants === null || enfants === undefined || enfants === false) return;
+  if (Array.isArray(enfants)) { for (const e of enfants) ajouterEnfants(noeud, e); return; }
+  if (enfants instanceof Node) { noeud.appendChild(enfants); return; }
+  noeud.appendChild(document.createTextNode(String(enfants)));
+}
+const SVG_NS = "http://www.w3.org/2000/svg";
+function icone(nom, classe) {
+  const svg = document.createElementNS(SVG_NS, "svg");
+  svg.setAttribute("viewBox", "0 0 24 24");
+  svg.setAttribute("class", "icone" + (classe ? " " + classe : ""));
+  svg.setAttribute("aria-hidden", "true");
+  svg.setAttribute("focusable", "false");
+  for (const d of (ICONES[nom] || [])) {
+    const p = document.createElementNS(SVG_NS, "path");
+    p.setAttribute("d", d);
+    svg.appendChild(p);
+  }
+  return svg;
+}
+function vider(noeud) { while (noeud && noeud.firstChild) noeud.removeChild(noeud.firstChild); }
+
+/* Les erreurs affichées ne montrent aucun détail technique */
+function messageUtilisateur(erreur) {
+  if (erreur instanceof ErreurLecture) return erreur.message;
+  return "Une erreur inattendue est survenue pendant la lecture. Vos dernières données sont conservées.";
+}
+
+/* =====================================================================
+   3. LECTURE DES DONNÉES
+   ===================================================================== */
+
+/* Normalisation tolérante : espaces, majuscules, accents, ponctuation */
+function normaliser(texte) {
+  return String(texte == null ? "" : texte)
+    .normalize("NFD").replace(/[̀-ͯ]/g, "")
+    .replace(/[’‘`]/g, "'")
+    .toLowerCase()
+    .replace(/[\s  _\-·.:;,()]+/g, " ")
+    .trim();
+}
+function correspond(texte, synonymes) {
+  const t = normaliser(texte);
+  if (!t) return false;
+  return synonymes.some(s => normaliser(s) === t);
+}
+
+/* Lecture des nombres : 1 234,56 · 1,234.56 · (1 234) · 12 % · − 52 800 */
+function lireNombre(v) {
+  if (typeof v === "number") return Number.isFinite(v) ? v : null;
+  if (typeof v === "boolean") return null;
+  if (v instanceof Date) return null;
+  if (typeof v !== "string") return null;
+  let s = v.trim().replace(/[  \s]/g, "").replace(/[−–—]/g, "-");
+  if (!s) return null;
+  let negatif = false;
+  if (/^\(.*\)$/.test(s)) { negatif = true; s = s.slice(1, -1); }
+  let pourcent = false;
+  if (s.endsWith("%")) { pourcent = true; s = s.slice(0, -1); }
+  s = s.replace(/(DH|MAD|dhs?|j|jours|×|x|fois)$/i, "");
+  const virgule = s.lastIndexOf(","), point = s.lastIndexOf(".");
+  if (virgule >= 0 && point >= 0) {
+    if (virgule > point) s = s.replace(/\./g, "").replace(",", ".");
+    else s = s.replace(/,/g, "");
+  } else if (virgule >= 0) {
+    s = /^-?\d{1,3}(,\d{3}){2,}$/.test(s) ? s.replace(/,/g, "") : s.replace(",", ".");
+  } else if (point >= 0 && /^-?\d{1,3}(\.\d{3}){2,}$/.test(s)) {
+    s = s.replace(/\./g, "");
+  }
+  if (!/^[-+]?\d*\.?\d+(e[-+]?\d+)?$/i.test(s)) return null;
+  let n = Number(s);
+  if (!Number.isFinite(n)) return null;
+  if (pourcent) n = n / 100;
+  if (negatif) n = -Math.abs(n);
+  return n;
+}
+function lireTexte(v) {
+  if (v === null || v === undefined) return "";
+  if (v instanceof Date) return v.toLocaleDateString("fr-FR");
+  return String(v);
+}
+
+/* Valeur d'une cellule SheetJS : erreurs (#N/A, #DIV/0!) traitées comme vides et comptées */
+function valeurCellule(ws, adresse, compteur) {
+  const c = ws[adresse];
+  if (!c) return null;
+  if (c.t === "e") { if (compteur) compteur.erreurs++; return null; }
+  if (c.t === "z" || (c.f !== undefined && (c.v === undefined || c.v === null))) {
+    if (c.f !== undefined && compteur) compteur.sansValeur++;
+    return null;
+  }
+  if (c.v === undefined) return null;
+  return c.v;
+}
+
+/* Construction d'une grille à coordonnées absolues (ligne 0 = ligne 1 d'Excel) */
+function construireGrille(ws, compteur) {
+  const ref = ws["!ref"];
+  if (!ref) return [];
+  const plage = XLSX.utils.decode_range(ref);
+  const grille = [];
+  for (let r = 0; r <= plage.e.r; r++) {
+    const ligne = [];
+    for (let c = 0; c <= plage.e.c; c++) {
+      ligne.push(r < plage.s.r || c < plage.s.c ? null : valeurCellule(ws, XLSX.utils.encode_cell({ r, c }), compteur));
+    }
+    grille.push(ligne);
+  }
+  return grille;
+}
+const ligneVide = (ligne) => !ligne || ligne.every(v => v === null || v === "" || (typeof v === "string" && !v.trim()));
+
+/* Recherche d'une ligne d'en-têtes contenant toutes les colonnes attendues */
+function trouverTableau(grille, enTetes, options) {
+  const obligatoires = (options && options.obligatoires) || Object.keys(enTetes);
+  const debut = (options && options.debut) || 0;
+  const fin = Math.min(grille.length, (options && options.limite) ? debut + options.limite : grille.length);
+  for (let r = debut; r < fin; r++) {
+    const ligne = grille[r] || [];
+    const colonnes = Object.create(null);
+    ligne.forEach((v, c) => {
+      if (v === null || estColonneInterdite(v)) return;
+      for (const cle of Object.keys(enTetes)) {
+        if (colonnes[cle] === undefined && correspond(v, enTetes[cle])) { colonnes[cle] = c; break; }
+      }
+    });
+    if (obligatoires.every(k => colonnes[k] !== undefined)) return { ligne: r, colonnes };
+  }
+  return null;
+}
+/* Les lignes d'un tableau jusqu'à la première ligne vide ; les lignes « Total » sont ignorées */
+function lignesDuTableau(grille, tableau, colonneCle) {
+  const res = [];
+  for (let r = tableau.ligne + 1; r < grille.length; r++) {
+    const ligne = grille[r];
+    if (ligneVide(ligne)) { if (res.length) break; else continue; }
+    const cle = ligne[tableau.colonnes[colonneCle]];
+    if (cle === null || cle === "") continue;
+    if (/^total\b/.test(normaliser(cle))) continue;
+    res.push({ r, ligne });
+  }
+  return res;
+}
+function trouverTexte(grille, synonymes, debut) {
+  for (let r = debut || 0; r < grille.length; r++) {
+    const ligne = grille[r] || [];
+    for (let c = 0; c < ligne.length; c++) {
+      const v = ligne[c];
+      if (typeof v === "string" && synonymes.some(s => normaliser(v).includes(normaliser(s)))) return { r, c };
+    }
+  }
+  return null;
+}
+
+/* Correspondance des onglets, tolérante aux espaces, accents et majuscules */
+function trouverOnglet(classeur, definition) {
+  const cibles = [definition.nom, ...definition.synonymes].map(normaliser);
+  return classeur.SheetNames.find(n => cibles.includes(normaliser(n))) || null;
+}
+
+/* Lecture des noms définis du classeur (Workbook.Names) */
+function indexerNomsDefinis(classeur) {
+  const index = new Map();
+  const noms = (classeur.Workbook && classeur.Workbook.Names) || [];
+  for (const n of noms) {
+    if (!n || !n.Name || !n.Ref) continue;
+    const cle = String(n.Name).trim().toUpperCase();
+    if (!index.has(cle) || n.Sheet === undefined) index.set(cle, String(n.Ref));
+  }
+  return index;
+}
+function lireReference(classeur, ref) {
+  const m = /^(?:'((?:[^']|'')+)'|([^!]+))!\$?([A-Z]{1,3})\$?(\d+)/.exec(ref.replace(/^=/, ""));
+  if (!m) return { erreur: "reference" };
+  const nomOnglet = (m[1] !== undefined ? m[1].replace(/''/g, "'") : m[2]).trim();
+  const onglet = classeur.SheetNames.find(s => normaliser(s) === normaliser(nomOnglet));
+  if (!onglet) return { erreur: "onglet", onglet: nomOnglet };
+  const ws = classeur.Sheets[onglet];
+  const adresse = m[3] + m[4];
+  const c = ws[adresse];
+  if (!c) return { valeur: null, onglet, adresse };
+  if (c.t === "e") return { valeur: null, onglet, adresse, erreurCellule: true };
+  if (c.f !== undefined && (c.v === undefined || c.v === null || c.t === "z")) return { valeur: null, onglet, adresse, sansValeur: true };
+  if (c.t === "z") return { valeur: null, onglet, adresse };
+  return { valeur: c.v === undefined ? null : c.v, onglet, adresse };
+}
+
+/* Lecture complète du classeur → modèle de données validé (ou ErreurLecture) */
+function lireClasseur(octets, ext) {
+  let classeur;
+  const optionsLecture = { cellFormula: true, sheetStubs: true, cellDates: true, cellNF: false, cellHTML: false, cellStyles: false, bookVBA: false, bookDeps: false, sheetRows: FORMAT_ATTENDU.lignesMax + 1, WTF: false };
+  try {
+    if (ext === ".csv") {
+      const texte = decoderTexte(octets);
+      const premiere = texte.split(/\r?\n/, 1)[0] || "";
+      const separateur = (premiere.match(/;/g) || []).length >= (premiere.match(/,/g) || []).length ? ";" : ",";
+      classeur = XLSX.read(texte, Object.assign({ type: "string", FS: separateur }, optionsLecture));
+    } else {
+      classeur = XLSX.read(octets, Object.assign({ type: "array" }, optionsLecture));
+    }
+  } catch (e) {
+    throw new ErreurLecture("Ce fichier n'est pas un classeur Excel lisible (fichier abîmé ou incomplet).", [], true);
+  }
+  if (!classeur || !Array.isArray(classeur.SheetNames) || classeur.SheetNames.length === 0) {
+    throw new ErreurLecture("Ce fichier ne contient aucun onglet lisible.");
+  }
+  /* Limite du nombre de lignes */
+  let totalLignes = 0;
+  for (const n of classeur.SheetNames) {
+    const ws = classeur.Sheets[n];
+    const ref = ws && (ws["!fullref"] || ws["!ref"]);
+    if (!ref) continue;
+    const p = XLSX.utils.decode_range(ref);
+    const lignes = p.e.r - p.s.r + 1;
+    totalLignes += lignes;
+    if (lignes > FORMAT_ATTENDU.lignesMax || totalLignes > FORMAT_ATTENDU.lignesMax) {
+      throw new ErreurLecture("Fichier refusé : plus de 50 000 lignes.");
+    }
+  }
+  return extraireModele(classeur);
+}
+
+/* Décodage CSV : UTF-8 d'abord, sinon Windows-1252 (accents corrects) */
+function decoderTexte(octets) {
+  try { return new TextDecoder("utf-8", { fatal: true }).decode(octets).replace(/^﻿/, ""); }
+  catch (e) { return new TextDecoder("windows-1252").decode(octets); }
+}
+
+function extraireModele(classeur) {
+  const erreurs = [];
+  const avertissements = [];
+  const compteur = { erreurs: 0, sansValeur: 0 };
+  const F = FORMAT_ATTENDU;
+
+  /* 1) Onglets */
+  const onglets = Object.create(null);
+  for (const cle of Object.keys(F.onglets)) {
+    const def = F.onglets[cle];
+    onglets[cle] = trouverOnglet(classeur, def);
+    if (!onglets[cle] && def.obligatoire) erreurs.push("Onglet manquant : « " + def.nom + " ».");
+  }
+  if (erreurs.length) throw new ErreurLecture("Le fichier ne respecte pas le format attendu.", erreurs);
+  const grilles = Object.create(null);
+  for (const cle of Object.keys(onglets)) if (onglets[cle]) grilles[cle] = construireGrille(classeur.Sheets[onglets[cle]], compteur);
+
+  /* 2) Noms définis */
+  const index = indexerNomsDefinis(classeur);
+  const noms = Object.create(null);
+  const sansValeur = [];
+  for (const def of F.nomsDefinis) {
+    const ref = index.get(def.nom);
+    if (!ref) { erreurs.push("Nom défini manquant : « " + def.nom + " » (onglet " + def.onglet + ")."); continue; }
+    if (/#REF!/i.test(ref)) { erreurs.push("Le nom défini « " + def.nom + " » (onglet " + def.onglet + ") pointe vers une cellule supprimée (#REF!)."); continue; }
+    const lu = lireReference(classeur, ref);
+    if (lu.erreur === "onglet") { erreurs.push("Le nom défini « " + def.nom + " » pointe vers un onglet introuvable (« " + lu.onglet + " »)."); continue; }
+    if (lu.erreur) { erreurs.push("Le nom défini « " + def.nom + " » (onglet " + def.onglet + ") n'a pas une référence de cellule simple."); continue; }
+    if (lu.sansValeur) { sansValeur.push(def.nom); continue; }
+    if (lu.erreurCellule) { compteur.erreurs++; erreurs.push("La cellule du nom défini « " + def.nom + " » (onglet " + def.onglet + ") est en erreur (#N/A, #DIV/0!…)."); continue; }
+    if (def.type === "nombre") {
+      const n = lireNombre(lu.valeur);
+      if (n === null) {
+        if (/^KPI_/.test(def.nom) && typeof lu.valeur === "string" && lu.valeur.trim()) noms[def.nom] = lu.valeur.trim();
+        else erreurs.push("Le nom défini « " + def.nom + " » (onglet " + def.onglet + ") ne contient pas un nombre.");
+        continue;
+      }
+      noms[def.nom] = n;
+    } else {
+      noms[def.nom] = lireTexte(lu.valeur).trim();
+    }
+  }
+  if (sansValeur.length) {
+    throw new ErreurLecture("Ouvrez le fichier dans Excel et enregistrez-le pour calculer les formules.",
+      ["Formules sans valeur enregistrée : " + sansValeur.slice(0, 6).join(", ") + (sansValeur.length > 6 ? " et " + (sansValeur.length - 6) + " autres" : "") + "."]);
+  }
+
+  /* 3) Onglet TFT : lignes O1 à T1 par leur code */
+  const gTft = grilles.tft;
+  const tabTft = trouverTableau(gTft, F.tft.enTetes, { obligatoires: ["code", "libelle", "n", "n1"], limite: 10 });
+  const tft = { lignes: [], parCode: Object.create(null) };
+  if (!tabTft) {
+    erreurs.push("Onglet TFT : ligne d'en-têtes introuvable dans les 10 premières lignes (Ligne, Libellé, 2027, 2026).");
+  } else {
+    const col = tabTft.colonnes;
+    const attendus = new Set(F.tft.codes);
+    let fini = false;
+    for (let r = tabTft.ligne + 1; r < gTft.length && !fini; r++) {
+      const ligne = gTft[r];
+      if (ligneVide(ligne)) continue;
+      const codeBrut = ligne[col.code];
+      const code = codeBrut === null ? "" : String(codeBrut).trim().toUpperCase();
+      const libelleBrut = lireTexte(ligne[col.libelle]);
+      const libelle = libelleBrut.trim();
+      if (code && attendus.has(code) && !tft.parCode[code]) {
+        const v27 = lireNombre(ligne[col.n]);
+        const v26 = lireNombre(ligne[col.n1]);
+        const niveau = F.tft.totaux.includes(code) ? "total" : F.tft.sousTotaux.includes(code) ? "sous-total" : "detail";
+        const enreg = { code, libelle, retrait: /^\s{2,}/.test(libelleBrut), niveau, n: v27 === null ? 0 : v27, n1: v26 === null ? 0 : v26, note: col.note !== undefined ? lireTexte(ligne[col.note]).trim() : "" };
+        tft.parCode[code] = enreg;
+        tft.lignes.push(enreg);
+        if (code === F.tft.dernierCode) fini = true;
+      } else if (!code && libelle && !tft.parCode[F.tft.dernierCode]) {
+        const estSection = libelle === libelle.toUpperCase() && /[A-Z]/.test(libelle);
+        tft.lignes.push({ code: "", libelle, niveau: estSection ? "section" : "sous-section" });
+      }
+    }
+    const manquants = F.tft.codes.filter(c => !tft.parCode[c]);
+    for (const c of manquants) erreurs.push("Code de ligne manquant : « " + c + " » en colonne B de l'onglet TFT.");
+  }
+
+  /* 4) Onglet KPI : K01 à K14, dictionnaire, seuils, graphiques, recommandations */
+  const gKpi = grilles.kpi;
+  const tabKpi = trouverTableau(gKpi, F.kpi.enTetes, { obligatoires: ["code", "libelle", "feuN", "feuN1"], limite: 10 });
+  const kpis = [];
+  const parCodeKpi = Object.create(null);
+  if (!tabKpi) {
+    erreurs.push("Onglet KPI : tableau des KPI introuvable dans les 10 premières lignes (N°, KPI, 2027, 2026, Feu 2027, Feu 2026).");
+  } else {
+    const col = tabKpi.colonnes;
+    for (const { ligne } of lignesDuTableau(gKpi, tabKpi, "code")) {
+      const code = String(ligne[col.code]).trim().toUpperCase();
+      if (!F.kpi.codes.includes(code) || parCodeKpi[code]) continue;
+      const nomBase = "KPI_" + F.kpi.noms[code];
+      const k = {
+        code,
+        libelle: lireTexte(ligne[col.libelle]).trim(),
+        n: noms[nomBase + "_2027"],
+        n1: noms[nomBase + "_2026"],
+        variation: col.variation !== undefined ? lireNombre(ligne[col.variation]) : null,
+        feuN: normaliserFeu(ligne[col.feuN]),
+        feuN1: normaliserFeu(ligne[col.feuN1]),
+        nomDefini: nomBase + "_2027",
+        definition: "", unite: "", seuilVert: "", seuilOrange: "", seuilRouge: "", pourquoi: "", sens: "", seuilVertNombre: null, seuilOrangeNombre: null
+      };
+      if (k.variation === null && typeof k.n === "number" && typeof k.n1 === "number") k.variation = k.n - k.n1;
+      kpis.push(k);
+      parCodeKpi[code] = k;
+    }
+    for (const c of F.kpi.codes) if (!parCodeKpi[c]) erreurs.push("Code de ligne manquant : « " + c + " » en colonne B de l'onglet KPI.");
+  }
+  const kpiVisible = (c) => parCodeKpi[c];
+
+  const tabDico = gKpi ? trouverTableau(gKpi, F.dictionnaire.enTetes, { obligatoires: ["code", "definition", "unite"] }) : null;
+  if (!tabDico) avertissements.push("Onglet KPI : dictionnaire des KPI introuvable (colonnes N°, Définition, Unité).");
+  else {
+    const col = tabDico.colonnes;
+    for (const { ligne } of lignesDuTableau(gKpi, tabDico, "code")) {
+      const k = kpiVisible(String(ligne[col.code]).trim().toUpperCase());
+      if (!k) continue;
+      k.definition = lireTexte(ligne[col.definition]).trim();
+      k.unite = lireTexte(ligne[col.unite]).trim();
+      k.seuilVert = col.vert !== undefined ? lireTexte(ligne[col.vert]).trim() : "";
+      k.seuilOrange = col.orange !== undefined ? lireTexte(ligne[col.orange]).trim() : "";
+      k.seuilRouge = col.rouge !== undefined ? lireTexte(ligne[col.rouge]).trim() : "";
+      k.pourquoi = col.pourquoi !== undefined ? lireTexte(ligne[col.pourquoi]).trim() : "";
+    }
+  }
+  const tabSeuils = gKpi ? trouverTableau(gKpi, F.seuils.enTetes, { obligatoires: ["code", "sens", "vert"] }) : null;
+  if (tabSeuils) {
+    const col = tabSeuils.colonnes;
+    for (const { ligne } of lignesDuTableau(gKpi, tabSeuils, "code")) {
+      const k = kpiVisible(String(ligne[col.code]).trim().toUpperCase());
+      if (!k) continue;
+      k.sens = lireTexte(ligne[col.sens]).trim();
+      k.seuilVertNombre = lireNombre(ligne[col.vert]);
+      k.seuilOrangeNombre = col.orange !== undefined ? lireNombre(ligne[col.orange]) : null;
+    }
+  }
+
+  const radar = lireSection(gKpi, F.radar.enTetes, "axe", avertissements, "Radar", (l, c) => ({
+    axe: lireTexte(l[c.axe]).trim(), n: lireNombre(l[c.n]), n1: lireNombre(l[c.n1]), cible: lireNombre(l[c.cible]),
+    scoreN: lireNombre(l[c.scoreN]), scoreN1: lireNombre(l[c.scoreN1]), sens: c.sens !== undefined ? lireTexte(l[c.sens]).trim() : ""
+  }));
+  const entonnoir = lireSection(gKpi, F.entonnoir.enTetes, "etape", avertissements, "Entonnoir", (l, c) => ({
+    etape: libelleCourt(lireTexte(l[c.etape])), valeur: lireNombre(l[c.valeur])
+  }));
+  const cascade = lireSection(gKpi, F.cascade.enTetes, "barre", avertissements, "Cascade", (l, c) => ({
+    barre: libelleCourt(lireTexte(l[c.barre])), debut: lireNombre(l[c.debut]), fin: lireNombre(l[c.fin])
+  }));
+  const jauges = lireSection(gKpi, F.jauges.enTetes, "jauge", avertissements, "Jauge", (l, c) => {
+    const repere = lireTexte(l[c.repere]).trim();
+    const m = /(-?\d+(?:[.,]\d+)?)\s*$/.exec(repere);
+    return { nom: lireTexte(l[c.jauge]).trim(), valeur: lireNombre(l[c.valeur]), maximum: lireNombre(l[c.maximum]),
+      repere: m ? lireNombre(m[1]) : null, repereMot: m ? repere.slice(0, m.index).trim() : repere };
+  });
+  const bullet = lireSection(gKpi, F.bullet.enTetes, "poste", avertissements, "Poste du cycle de cash", (l, c) => ({
+    poste: lireTexte(l[c.poste]).trim(), valeur: lireNombre(l[c.valeur]), seuil: lireNombre(l[c.seuil])
+  }));
+
+  /* Recommandations au DG (section 5), recopiées mot pour mot */
+  const recos = [];
+  let noteRecos = "";
+  if (gKpi) {
+    const tabBullet = trouverTableau(gKpi, F.bullet.enTetes);
+    const repere = trouverTexte(gKpi, F.recos.reperes, tabBullet ? Math.max(0, tabBullet.ligne - 3) : 0);
+    if (repere) {
+      for (let r = repere.r + 1; r < gKpi.length && recos.length < 3; r++) {
+        for (const v of (gKpi[r] || [])) {
+          if (typeof v === "string" && /^\s*[1-9]\.\s+\S/.test(v)) { recos.push(v.trim().replace(/^[1-9]\.\s+/, "")); break; }
+        }
+      }
+      const note = trouverTexte(gKpi, F.recos.note, repere.r);
+      if (note) noteRecos = lireTexte(gKpi[note.r][note.c]).trim();
+    }
+  }
+
+  /* 5) LISEZ-MOI : le message principal ; DASHBOARD : le titre */
+  let message = "";
+  const gLm = grilles.lisezMoi;
+  const repMsg = gLm ? trouverTexte(gLm, F.lisezMoi.message) : null;
+  if (repMsg) {
+    for (let r = repMsg.r + 1; r < Math.min(gLm.length, repMsg.r + 4) && !message; r++) {
+      for (const v of (gLm[r] || [])) if (typeof v === "string" && v.trim().length > 20) { message = v.trim(); break; }
+    }
+  }
+  if (!message) avertissements.push("Onglet LISEZ-MOI : « Le message principal » introuvable ; un message est rédigé à partir des chiffres.");
+  const titre = premierTexte(grilles.dashboard) || premierTexte(gKpi) || premierTexte(gTft) || "Situation TFT 2027";
+  const titreTft = premierTexte(gTft);
+
+  /* 6) CONTROLES : statut global et nombre de contrôles */
+  const gCtl = grilles.controles;
+  const total = lireValeurAdroite(gCtl, F.controles.total);
+  const conformes = lireValeurAdroite(gCtl, F.controles.conformes);
+  const controles = { statut: noms.STATUT_GLOBAL || "", total: total, conformes: conformes, enEcart: (total !== null && conformes !== null) ? Math.max(0, total - conformes) : null };
+  const tabCtl = gCtl ? trouverTableau(gCtl, { code: ["N°"], controle: ["Contrôle"], statut: ["Statut"], fichier: ["Fichier"] }) : null;
+  if (tabCtl) {
+    const lignesCtl = lignesDuTableau(gCtl, tabCtl, "code");
+    const ecartsTable = lignesCtl.filter(({ ligne }) => normaliser(ligne[tabCtl.colonnes.statut]) !== "conforme").length;
+    if (controles.total === null) controles.total = lignesCtl.length;
+    if (controles.enEcart === null || ecartsTable > controles.enEcart) controles.enEcart = ecartsTable;
+  }
+
+  /* 7) Bilans IFRS (facultatif) pour le recalcul indépendant */
+  const bilan = lireBilanIfrs(grilles.retraitementsIfrs);
+
+  if (compteur.sansValeur > 0) avertissements.push(compteur.sansValeur + " formule(s) sans valeur enregistrée : ouvrez le fichier dans Excel et enregistrez-le pour calculer les formules.");
+  if (compteur.erreurs > 0) avertissements.push(compteur.erreurs + " cellule(s) en erreur (#N/A, #DIV/0!…) ont été traitées comme vides.");
+  if (erreurs.length) throw new ErreurLecture("Le fichier ne respecte pas le format attendu.", erreurs);
+
+  return {
+    titre, titreTft, message, tft,
+    totaux: lireTotaux(noms),
+    kpis, params: lireParams(noms), radar, entonnoir, cascade, jauges, bullet, recos, noteRecos, controles, bilan,
+    avertissements
+  };
+}
+
+function normaliserFeu(v) {
+  const t = normaliser(v);
+  if (t === "vert" || t === "green") return "VERT";
+  if (t === "ambre" || t === "orange" || t === "amber") return "AMBRE";
+  if (t === "rouge" || t === "red") return "ROUGE";
+  return "–";
+}
+function libelleCourt(texte) { return String(texte || "").split(" · ")[0].trim(); }
+function premierTexte(grille) {
+  if (!grille) return "";
+  for (let r = 0; r < Math.min(grille.length, 4); r++) for (const v of (grille[r] || [])) if (typeof v === "string" && v.trim().length > 8) return v.trim();
+  return "";
+}
+function lireValeurAdroite(grille, synonymes) {
+  if (!grille) return null;
+  const pos = trouverTexte(grille, synonymes);
+  if (!pos) return null;
+  const ligne = grille[pos.r];
+  for (let c = pos.c + 1; c < ligne.length; c++) { const n = lireNombre(ligne[c]); if (n !== null) return n; }
+  return null;
+}
+function lireSection(grille, enTetes, cle, avertissements, nomSection, transformer) {
+  if (!grille) return [];
+  const tab = trouverTableau(grille, enTetes);
+  if (!tab) { avertissements.push("Onglet KPI, section 4 ou 5 : tableau « " + nomSection + " » introuvable ; le graphique correspondant est masqué."); return []; }
+  return lignesDuTableau(grille, tab, cle).map(({ ligne }) => transformer(ligne, tab.colonnes));
+}
+function lireTotaux(noms) {
+  const t = Object.create(null);
+  for (const c of ["OT", "IT", "FT", "V", "T0", "T1"]) t[c] = { n: noms["TFT_" + c + "_2027"], n1: noms["TFT_" + c + "_2026"] };
+  return t;
+}
+function lireParams(noms) {
+  const p = Object.create(null);
+  for (const k of Object.keys(noms)) if (k.startsWith("PARAM_")) p[k.slice(6)] = noms[k];
+  return p;
+}
+function lireBilanIfrs(grille) {
+  if (!grille) return null;
+  const B = FORMAT_ATTENDU.bilan;
+  const res = Object.create(null);
+  const lireCode = (code, entetesN, entetesN1) => {
+    for (let r = 0; r < grille.length; r++) {
+      const v = grille[r] && grille[r][1];
+      if (v === null || String(v).trim().toUpperCase() !== code) continue;
+      for (let h = r - 1; h >= 0; h--) {
+        const ligne = grille[h] || [];
+        const cN = ligne.findIndex(x => correspond(x, entetesN));
+        const cN1 = ligne.findIndex(x => correspond(x, entetesN1));
+        if (cN >= 0 && cN1 >= 0) return { n: lireNombre(grille[r][cN]), n1: lireNombre(grille[r][cN1]) };
+      }
+    }
+    return null;
+  };
+  for (const c of B.codesBilan) res[c] = lireCode(c, B.enTeteN, B.enTeteN1);
+  for (const c of B.codesResultat) res[c] = lireCode(c, ["2027"], ["2026"]);
+  return Object.values(res).every(x => x && x.n !== null && x.n1 !== null) ? res : null;
+}
+
+/* =====================================================================
+   4. SYNCHRONISATION · Excel ↔ application (3 modes choisis automatiquement)
+   ===================================================================== */
+
+const Sync = {
+  actif: true,
+  mode: null,            /* "direct" | "en-ligne" | "import" | null */
+  poignee: null,         /* FileSystemFileHandle (jamais le contenu) */
+  nomFichier: "",
+  derniereMaj: null,
+  signature: null,
+  statut: "aucun",
+  raison: "",
+  minuteur: null,
+  enCours: false,
+  relance: false
+};
+
+const supporteAccesDirect = typeof window.showOpenFilePicker === "function";
+const estEnLigne = location.protocol === "http:" || location.protocol === "https:";
+const estLocal = estEnLigne && /^(localhost|127\.0\.0\.1|\[::1\]|.+\.localhost)$/i.test(location.hostname);
+
+function lireReglageSynchro() {
+  try { return localStorage.getItem(REGLAGES.cleSynchro) !== "off"; } catch (e) { return true; }
+}
+function ecrireReglageSynchro(actif) {
+  try { localStorage.setItem(REGLAGES.cleSynchro, actif ? "on" : "off"); } catch (e) { /* stockage indisponible : choix non mémorisé */ }
+}
+
+/* IndexedDB : on garde la poignée du fichier, jamais son contenu */
+function ouvrirIdb() {
+  return new Promise((resoudre, rejeter) => {
+    if (!("indexedDB" in window)) { rejeter(new Error("idb")); return; }
+    let req;
+    try { req = indexedDB.open(REGLAGES.baseIdb, 1); } catch (e) { rejeter(e); return; }
+    req.onupgradeneeded = () => { req.result.createObjectStore(REGLAGES.magasinIdb); };
+    req.onsuccess = () => resoudre(req.result);
+    req.onerror = () => rejeter(req.error);
+  });
+}
+async function idb(action, valeur) {
+  try {
+    const db = await ouvrirIdb();
+    return await new Promise((resoudre, rejeter) => {
+      const tx = db.transaction(REGLAGES.magasinIdb, action === "lire" ? "readonly" : "readwrite");
+      const st = tx.objectStore(REGLAGES.magasinIdb);
+      const req = action === "lire" ? st.get(REGLAGES.clePoignee) : action === "ecrire" ? st.put(valeur, REGLAGES.clePoignee) : st.delete(REGLAGES.clePoignee);
+      req.onsuccess = () => resoudre(req.result);
+      req.onerror = () => rejeter(req.error);
+      tx.oncomplete = () => db.close();
+    });
+  } catch (e) { return null; }
+}
+
+const attendre = (ms) => new Promise(r => setTimeout(r, ms));
+
+function changerEtat(statut, raison) {
+  Sync.statut = statut;
+  Sync.raison = raison || "";
+  dessinerPanneauxSync();
+}
+
+function planifier() {
+  clearTimeout(Sync.minuteur);
+  Sync.minuteur = null;
+  if (!Sync.actif || !Sync.mode || Sync.mode === "import") return;
+  const delai = Sync.mode === "direct" ? REGLAGES.intervalleDirect : (estLocal ? REGLAGES.intervalleLocal : REGLAGES.intervalleEnLigne);
+  Sync.minuteur = setTimeout(verifier, delai);
+}
+
+async function verifier() {
+  clearTimeout(Sync.minuteur);
+  if (!Sync.actif) { if (Etat.modele) changerEtat("pause"); return; }
+  if (Sync.enCours) { Sync.relance = true; return; }
+  Sync.enCours = true;
+  try {
+    if (Sync.mode === "direct") await verifierDirect();
+    else if (Sync.mode === "en-ligne") await verifierEnLigne(false);
+  } catch (e) {
+    /* tout est déjà traité dans les fonctions appelées */
+  } finally {
+    Sync.enCours = false;
+    if (Sync.relance) { Sync.relance = false; setTimeout(verifier, 0); }
+    else planifier();
+  }
+}
+
+/* Mode A · Direct : relit le fichier toutes les 2 s (getFile), compare date et taille */
+async function verifierDirect() {
+  const p = Sync.poignee;
+  if (!p) return;
+  try {
+    const perm = await p.queryPermission({ mode: "read" });
+    if (perm !== "granted") { changerEtat("reconnexion", "Autorisation à renouveler pour « " + p.name + " »."); return; }
+    let f = await obtenirAvecPatience(() => p.getFile());
+    const sig = { lm: f.lastModified, taille: f.size };
+    if (Sync.signature && sig.lm === Sync.signature.lm && sig.taille === Sync.signature.taille) {
+      if (Sync.statut !== "ok" && Sync.statut !== "erreur" && Etat.modele) changerEtat("ok");
+      return;
+    }
+    changerEtat("lecture");
+    /* Excel enregistre : on attend 700 ms et on ne traite que si date et taille sont stables */
+    if (Sync.signature) {
+      for (let i = 0; i < 12; i++) {
+        await attendre(REGLAGES.attenteStabilite);
+        const g = await obtenirAvecPatience(() => p.getFile());
+        const stable = g.lastModified === f.lastModified && g.size === f.size;
+        f = g;
+        if (stable) break;
+      }
+    }
+    for (let essai = 0; essai <= REGLAGES.essaisLecture; essai++) {
+      const octets = await lireAvecEssais(() => p.getFile());
+      if (!octets) return;
+      const r = await traiterOctets(octets.donnees, octets.fichier.name, octets.fichier.size, { lm: octets.fichier.lastModified, taille: octets.fichier.size }, { essai: essai < REGLAGES.essaisLecture });
+      if (r !== "reessayer") return;
+      await attendre(REGLAGES.delaiEssais);
+    }
+  } catch (e) {
+    gererErreurAcces(e);
+  }
+}
+
+/* Pendant qu'Excel remplace le fichier, il peut disparaître un instant : 3 essais en 1 seconde */
+async function obtenirAvecPatience(obtenir) {
+  for (let essai = 0; ; essai++) {
+    try { return await obtenir(); }
+    catch (e) {
+      if (essai >= REGLAGES.essaisLecture || !(e && (e.name === "NotFoundError" || e.name === "NotReadableError"))) throw e;
+      await attendre(REGLAGES.delaiEssais);
+    }
+  }
+}
+
+/* Fichier illisible pendant l'enregistrement : 3 nouveaux essais en 1 seconde */
+async function lireAvecEssais(obtenirFichier) {
+  let derniere = null;
+  for (let essai = 0; essai <= REGLAGES.essaisLecture; essai++) {
+    try {
+      const fichier = await obtenirFichier();
+      controlerFichierAvantLecture(fichier.name, fichier.size);
+      const donnees = new Uint8Array(await fichier.arrayBuffer());
+      return { fichier, donnees };
+    } catch (e) {
+      derniere = e;
+      const reessayable = (e && (e.name === "NotReadableError" || e.name === "NotFoundError" || (e instanceof ErreurLecture && e.reessayable)));
+      if (!reessayable) throw e;
+      await attendre(REGLAGES.delaiEssais);
+    }
+  }
+  if (derniere && derniere.name === "NotFoundError") throw derniere;
+  changerEtat("erreur", derniere instanceof ErreurLecture ? derniere.message : "Le fichier est verrouillé ou en cours d'enregistrement.");
+  return null;
+}
+
+function gererErreurAcces(e) {
+  const nom = e && e.name;
+  if (e instanceof ErreurLecture) { changerEtat("erreur", e.message); afficherAlerte(e); return; }
+  if (nom === "NotFoundError") changerEtat("reconnexion", "Le fichier a été déplacé, renommé ou supprimé.");
+  else if (nom === "NotAllowedError" || nom === "SecurityError") changerEtat("reconnexion", "L'autorisation de lecture a été retirée.");
+  else if (nom === "NotReadableError") changerEtat("erreur", "Le fichier est verrouillé ou en cours d'enregistrement.");
+  else changerEtat("reconnexion", "Le fichier n'est plus accessible (ordinateur sorti de veille ou fichier déplacé).");
+}
+
+/* Mode B · En ligne : relit donnees.xlsx à côté d'index.html */
+async function verifierEnLigne(premier) {
+  let reponse;
+  try {
+    reponse = await fetch(FORMAT_ATTENDU.fichierEnLigne, { cache: "no-cache", credentials: "same-origin", redirect: "follow" });
+  } catch (e) {
+    if (premier) return false;
+    changerEtat("reconnexion", "Le fichier en ligne est injoignable pour le moment.");
+    return false;
+  }
+  if (!reponse.ok) {
+    if (premier) return false;
+    changerEtat("reconnexion", "Le fichier en ligne « " + FORMAT_ATTENDU.fichierEnLigne + " » est introuvable.");
+    return false;
+  }
+  const longueur = Number(reponse.headers.get("content-length") || 0);
+  if (longueur > FORMAT_ATTENDU.tailleMaxOctets) {
+    changerEtat("erreur", "Fichier trop volumineux : la limite est de 10 Mo.");
+    return false;
+  }
+  const donnees = new Uint8Array(await reponse.arrayBuffer());
+  const sig = await empreinteOctets(donnees);
+  if (Sync.signature && Sync.signature === sig) {
+    if (Sync.statut !== "ok" && Sync.statut !== "erreur" && Etat.modele) changerEtat("ok");
+    return true;
+  }
+  if (Etat.modele) changerEtat("lecture");
+  Sync.nomFichier = FORMAT_ATTENDU.fichierEnLigne;
+  await traiterOctets(donnees, FORMAT_ATTENDU.fichierEnLigne, donnees.length, sig);
+  return true;
+}
+
+/* Traitement commun : sécurité → lecture → validation → empreinte → affichage */
+async function traiterOctets(donnees, nom, taille, signature, options) {
+  try {
+    const ext = controlerFichierAvantLecture(nom, taille);
+    controlerSignature(ext, donnees);
+    const modele = lireClasseur(donnees, ext);
+    const empreinte = await calculerEmpreinte(modele);
+    Sync.signature = signature;
+    Sync.nomFichier = nom;
+    effacerAlerte();
+    if (empreinte !== Etat.empreinte) {
+      appliquerModele(modele, empreinte);
+      Sync.derniereMaj = new Date();
+    } else if (!Sync.derniereMaj) {
+      Sync.derniereMaj = new Date();
+    }
+    changerEtat(Sync.actif || Sync.mode === "import" ? "ok" : "pause");
+    if (modele.avertissements.length) afficherAlerte(new ErreurLecture("Le fichier est lu, avec quelques remarques.", modele.avertissements), true);
+    return true;
+  } catch (e) {
+    if (e instanceof ErreurLecture && e.reessayable && options && options.essai) return "reessayer";
+    Sync.signature = signature;
+    const err = e instanceof ErreurLecture ? e : new ErreurLecture(messageUtilisateur(e));
+    changerEtat("erreur", err.message);
+    afficherAlerte(err);
+    if (!Etat.modele) { Etat.erreurInitiale = err; dessinerPage(); }
+    return false;
+  }
+}
+
+/* Empreinte SHA-256 des données lues (Web Crypto) : on ne redessine que si elle change */
+async function empreinteOctets(octets) {
+  try {
+    if (window.crypto && crypto.subtle) {
+      const h = await crypto.subtle.digest("SHA-256", octets);
+      return Array.from(new Uint8Array(h)).map(b => b.toString(16).padStart(2, "0")).join("");
+    }
+  } catch (e) { /* repli ci-dessous */ }
+  let h = 0x811c9dc5;
+  for (let i = 0; i < octets.length; i++) { h ^= octets[i]; h = Math.imul(h, 0x01000193) >>> 0; }
+  return "fnv-" + h.toString(16) + "-" + octets.length;
+}
+async function calculerEmpreinte(modele) {
+  const texte = JSON.stringify(modele);
+  try {
+    if (window.crypto && crypto.subtle) {
+      const h = await crypto.subtle.digest("SHA-256", new TextEncoder().encode(texte));
+      return Array.from(new Uint8Array(h)).map(b => b.toString(16).padStart(2, "0")).join("");
+    }
+  } catch (e) { /* repli ci-dessous */ }
+  let h = 0x811c9dc5;
+  for (let i = 0; i < texte.length; i++) { h ^= texte.charCodeAt(i); h = Math.imul(h, 0x01000193) >>> 0; }
+  return "fnv-" + h.toString(16);
+}
+
+/* Actions de l'utilisateur */
+async function connecterFichier() {
+  if (!supporteAccesDirect) { ouvrirImport(); return; }
+  let poignees;
+  try {
+    poignees = await window.showOpenFilePicker({
+      multiple: false, excludeAcceptAllOption: false,
+      types: [{ description: "Classeur Excel", accept: {
+        "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet": [".xlsx"],
+        "application/vnd.ms-excel.sheet.macroEnabled.12": [".xlsm"],
+        "application/vnd.ms-excel": [".xls"], "text/csv": [".csv"] } }]
+    });
+  } catch (e) { return; /* choix annulé */ }
+  if (!poignees || !poignees[0]) return;
+  await brancherPoignee(poignees[0]);
+}
+async function brancherPoignee(poignee) {
+  Sync.poignee = poignee;
+  Sync.mode = "direct";
+  Sync.nomFichier = poignee.name;
+  Sync.signature = null;
+  await idb("ecrire", poignee);
+  changerEtat("lecture");
+  verifier();
+}
+async function reconnecter() {
+  if (Sync.mode === "en-ligne" && !Sync.poignee) { Sync.signature = null; verifier(); return; }
+  const p = Sync.poignee;
+  if (!p) { connecterFichier(); return; }
+  try {
+    const perm = await p.requestPermission({ mode: "read" });
+    if (perm !== "granted") { changerEtat("reconnexion", "Autorisation refusée : cliquez à nouveau sur « Reconnecter »."); return; }
+    await p.getFile();
+    Sync.mode = "direct";
+    Sync.signature = null;
+    if (!Sync.actif) { Sync.actif = true; ecrireReglageSynchro(true); }
+    verifier();
+  } catch (e) {
+    if (e && e.name === "NotFoundError") { await idb("effacer"); Sync.poignee = null; connecterFichier(); }
+    else gererErreurAcces(e);
+  }
+}
+function ouvrirImport() {
+  const entree = document.getElementById("entree-fichier");
+  entree.value = "";
+  entree.click();
+}
+async function importerFichier(fichier) {
+  if (!fichier) return;
+  clearTimeout(Sync.minuteur);
+  Sync.poignee = null;
+  await idb("effacer");
+  Sync.mode = "import";
+  Sync.signature = null;
+  changerEtat("lecture");
+  try {
+    controlerFichierAvantLecture(fichier.name, fichier.size);
+    const donnees = new Uint8Array(await fichier.arrayBuffer());
+    await traiterOctets(donnees, fichier.name, fichier.size, { lm: fichier.lastModified, taille: fichier.size });
+  } catch (e) {
+    const err = e instanceof ErreurLecture ? e : new ErreurLecture(messageUtilisateur(e));
+    changerEtat("erreur", err.message);
+    afficherAlerte(err);
+    if (!Etat.modele) { Etat.erreurInitiale = err; dessinerPage(); }
+  }
+}
+function basculerSynchro() {
+  Sync.actif = !Sync.actif;
+  ecrireReglageSynchro(Sync.actif);
+  if (Sync.actif) {
+    afficherToast("Synchronisation activée : vérification immédiate.");
+    if (Sync.mode === "direct" || Sync.mode === "en-ligne") { changerEtat(Etat.modele ? "lecture" : "aucun"); verifier(); }
+    else changerEtat(Etat.modele ? "ok" : "aucun");
+  } else {
+    clearTimeout(Sync.minuteur);
+    changerEtat("pause");
+    afficherToast("Synchronisation en pause : les données affichées restent figées.");
+  }
+}
+async function effacerDonnees() {
+  clearTimeout(Sync.minuteur);
+  await idb("effacer");
+  try { localStorage.removeItem(REGLAGES.cleSynchro); } catch (e) { /* rien à effacer */ }
+  Sync.poignee = null; Sync.mode = null; Sync.signature = null; Sync.nomFichier = ""; Sync.derniereMaj = null; Sync.actif = true;
+  Etat.modele = null; Etat.empreinte = null; Etat.erreurInitiale = null;
+  changerEtat("aucun");
+  dessinerMenu();
+  dessinerPage();
+  afficherToast("Données effacées : aucun fichier n'est plus connecté.");
+}
+
+/* Fichier glissé dans la page : connecté en direct si le navigateur le permet */
+function installerDepot() {
+  const voile = document.getElementById("depot-global");
+  let profondeur = 0;
+  window.addEventListener("dragenter", (e) => { if (aDesFichiers(e)) { profondeur++; voile.classList.add("visible"); e.preventDefault(); } });
+  window.addEventListener("dragover", (e) => { if (aDesFichiers(e)) e.preventDefault(); });
+  window.addEventListener("dragleave", () => { profondeur = Math.max(0, profondeur - 1); if (!profondeur) voile.classList.remove("visible"); });
+  window.addEventListener("drop", async (e) => {
+    e.preventDefault();
+    profondeur = 0; voile.classList.remove("visible");
+    const item = e.dataTransfer && e.dataTransfer.items && e.dataTransfer.items[0];
+    if (item && item.kind === "file" && typeof item.getAsFileSystemHandle === "function") {
+      const fichierRepli = item.getAsFile();
+      try {
+        const poignee = await item.getAsFileSystemHandle();
+        if (poignee && poignee.kind === "file") {
+          controlerFichierAvantLecture(poignee.name, 1);
+          await brancherPoignee(poignee);
+          return;
+        }
+      } catch (err) {
+        if (err instanceof ErreurLecture) { changerEtat("erreur", err.message); afficherAlerte(err); return; }
+      }
+      importerFichier(fichierRepli);
+      return;
+    }
+    const f = e.dataTransfer && e.dataTransfer.files && e.dataTransfer.files[0];
+    if (f) importerFichier(f);
+  });
+}
+const aDesFichiers = (e) => e.dataTransfer && Array.from(e.dataTransfer.types || []).includes("Files");
+
+/* =====================================================================
+   5. CALCULS · chaque calcul est une fonction séparée, simple à vérifier
+   ===================================================================== */
+const Calculs = Object.freeze({
+  ebitda: (resultatOperationnel, dotations, depreciations) => resultatOperationnel + dotations + depreciations,
+  conversionCash: (ot, ebitda) => ot / ebitda,
+  otSurResultatNet: (ot, resultatNet) => ot / resultatNet,
+  freeCashFlow: (ot, i1, i2) => ot + i1 + i2,
+  freeCashFlowApresLoyers: (fcf, f4, f5) => fcf + f4 + f5,
+  investissementsSurAmortissements: (i1, i2, dotations) => dotations ? -(i1 + i2) / dotations : 0,
+  delaiClients: (clients, chiffreAffaires, tva, jours) => clients / (chiffreAffaires * (1 + tva)) * jours,
+  delaiStocks: (stocks, achatsConsommes, jours) => stocks / achatsConsommes * jours,
+  delaiFournisseurs: (fournisseurs, achatsConsommes, tva, jours) => fournisseurs / (achatsConsommes * (1 + tva)) * jours,
+  cycleCash: (dso, dio, dpo) => dso + dio - dpo,
+  detteNette: (emprunts, detteLocation, tresorerieNette) => emprunts + detteLocation - tresorerieNette,
+  levier: (detteNette, ebitda) => detteNette / ebitda,
+  levierHorsIfrs16: (detteNette, detteLocation, ebitda, f4, f5) => (detteNette - detteLocation) / (ebitda + f4 + f5),
+  couvertureDette: (ot, f2, f3, f4, f5) => ot / -(f2 + f3 + f4 + f5),
+  couvertureDividendes: (fcf, f6) => fcf / -f6
+});
+
+/* Recalcul indépendant des 14 KPI à partir du TFT et des bilans IFRS */
+function recalculerKpi(modele) {
+  const t = modele.tft.parCode, b = modele.bilan, p = modele.params;
+  if (!b || !t.O1) return null;
+  const res = Object.create(null);
+  for (const a of ["n", "n1"]) {
+    const v = (c) => t[c] ? t[c][a] : 0;
+    const e = Calculs.ebitda(v("O1"), v("O2"), v("O3"));
+    const fcf = Calculs.freeCashFlow(v("OT"), v("I1"), v("I2"));
+    const dso = Calculs.delaiClients(b.A8[a], b.CA[a], p.TVA, p.JOURS);
+    const dio = Calculs.delaiStocks(b.A7[a], b.AC[a], p.JOURS);
+    const dpo = Calculs.delaiFournisseurs(b.L6[a], b.AC[a], p.TVA, p.JOURS);
+    const dn = Calculs.detteNette(b.L2[a], b.L3[a], v("T1"));
+    const valeurs = {
+      K01: Calculs.conversionCash(v("OT"), e), K02: Calculs.otSurResultatNet(v("OT"), b.RN[a]),
+      K03: fcf, K04: Calculs.freeCashFlowApresLoyers(fcf, v("F4"), v("F5")),
+      K05: Calculs.investissementsSurAmortissements(v("I1"), v("I2"), v("O2")),
+      K06: dso, K07: dio, K08: dpo, K09: Calculs.cycleCash(dso, dio, dpo),
+      K10: dn, K11: Calculs.levier(dn, e), K12: Calculs.levierHorsIfrs16(dn, b.L3[a], e, v("F4"), v("F5")),
+      K13: Calculs.couvertureDette(v("OT"), v("F2"), v("F3"), v("F4"), v("F5")),
+      K14: Calculs.couvertureDividendes(fcf, v("F6"))
+    };
+    for (const c of Object.keys(valeurs)) { res[c] = res[c] || {}; res[c][a] = valeurs[c]; }
+  }
+  return res;
+}
+function comparerRecalcul(modele) {
+  const calc = recalculerKpi(modele);
+  if (!calc) return { disponible: false, ecarts: [], egaux: 0, total: 0 };
+  const ecarts = [];
+  let egaux = 0, total = 0;
+  for (const k of modele.kpis) {
+    for (const a of ["n", "n1"]) {
+      if (typeof k[a] !== "number" || !calc[k.code]) continue;
+      total++;
+      const diff = Math.abs(k[a] - calc[k.code][a]);
+      if (diff <= 1e-6 * Math.max(1, Math.abs(k[a]))) egaux++;
+      else ecarts.push({ code: k.code, annee: a === "n" ? 2027 : 2026, fichier: k[a], calcul: calc[k.code][a] });
+    }
+  }
+  return { disponible: true, ecarts, egaux, total, valeurs: calc };
+}
+
+/* Feu d'une famille : le plus sévère de ses KPI */
+function feuFamille(famille, modele) {
+  const ordre = { "ROUGE": 3, "AMBRE": 2, "VERT": 1, "–": 0 };
+  let pire = "–";
+  for (const c of famille.codes) {
+    const k = modele.kpis.find(x => x.code === c);
+    if (k && ordre[k.feuN] > ordre[pire]) pire = k.feuN;
+  }
+  return pire;
+}
+
+/* Différences entre deux versions des données (pour le résumé du changement) */
+function aplatir(objet, prefixe, sortie) {
+  sortie = sortie || new Map();
+  if (objet === null || typeof objet !== "object") { sortie.set(prefixe, objet); return sortie; }
+  for (const cle of Object.keys(objet)) {
+    if (cle === "avertissements" || cle === "lignes") continue;
+    aplatir(objet[cle], prefixe ? prefixe + "." + cle : cle, sortie);
+  }
+  return sortie;
+}
+function compterDifferences(ancien, nouveau) {
+  const a = aplatir(ancien), n = aplatir(nouveau);
+  let nb = 0;
+  const cles = new Set([...a.keys(), ...n.keys()]);
+  for (const c of cles) if (a.get(c) !== n.get(c)) nb++;
+  return nb;
+}
+function kpiModifies(ancien, nouveau) {
+  const res = new Set();
+  if (!ancien) return res;
+  for (const k of nouveau.kpis) {
+    const v = ancien.kpis.find(x => x.code === k.code);
+    if (!v || v.n !== k.n || v.n1 !== k.n1 || v.feuN !== k.feuN || v.feuN1 !== k.feuN1) res.add(k.code);
+  }
+  for (const c of Object.keys(nouveau.totaux)) {
+    const v = ancien.totaux[c], k = nouveau.totaux[c];
+    if (!v || v.n !== k.n || v.n1 !== k.n1) res.add(c);
+  }
+  return res;
+}
+
+/* Points d'attention générés si les recommandations manquent (règles simples, aucun appel réseau) */
+function genererPointsAttention(m) {
+  const k = (c) => m.kpis.find(x => x.code === c) || {};
+  const p = m.params;
+  const pts = [];
+  const fcf = k("K03").n, lev = k("K11").n, div = k("K14").n, ccc = k("K09").n, dscr = k("K13").n;
+  if (typeof fcf === "number") pts.push(fcf < 0
+    ? "Le free cash-flow 2027 est de " + formaterValeur(fcf, "DH") + " : les investissements dépassent le cash dégagé par l'exploitation. Financer les investissements par un crédit à moyen terme plutôt que par le découvert."
+    : "Le free cash-flow 2027 est de " + formaterValeur(fcf, "DH") + " : l'exploitation finance les investissements.");
+  if (typeof lev === "number") pts.push(lev > p.PLAFOND
+    ? "La dette nette vaut " + formaterValeur(lev, "fois") + " l'EBITDA, au-dessus du plafond bancaire de " + formaterNombre(p.PLAFOND, 2) + " : prioriser le désendettement."
+    : "La dette nette vaut " + formaterValeur(lev, "fois") + " l'EBITDA, sous le plafond bancaire de " + formaterNombre(p.PLAFOND, 2) + ".");
+  if (typeof div === "number" && div < 1) pts.push("La couverture des dividendes est de " + formaterValeur(div, "fois") + " : le dividende n'est pas payé par le cash libre.");
+  else if (typeof ccc === "number") pts.push("Le cycle de cash est de " + formaterValeur(ccc, "jours") + " ; la couverture du service de la dette est de " + formaterValeur(dscr, "fois") + ".");
+  return pts.slice(0, 3);
+}
+
+/* =====================================================================
+   6. AFFICHAGE
+   ===================================================================== */
+
+const Etat = {
+  modele: null, empreinte: null, erreurInitiale: null, chargement: true,
+  familleOuvertes: new Set(), graphiques: [], observateurs: [], dejaAnime: new Set(), alerte: null
+};
+const reduireAnimations = () => window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+
+/* ---------- Formats à la française ---------- */
+function formaterNombre(x, decimales) {
+  if (typeof x !== "number" || !Number.isFinite(x)) return "n.s.";
+  const arrondi = Number(Math.abs(x).toFixed(decimales));
+  const [ent, dec] = arrondi.toFixed(decimales).split(".");
+  const entier = ent.replace(/\B(?=(\d{3})+(?!\d))/g, " ");
+  const corps = dec ? entier + "," + dec : entier;
+  return (x < 0 && arrondi !== 0 ? "− " : "") + corps;
+}
+function formaterKmad(dh, fixe) {
+  if (typeof dh !== "number") return "n.s.";
+  const k = dh / 1000;
+  if (fixe) return formaterNombre(k, 1);
+  const unDec = Number(k.toFixed(1));
+  return formaterNombre(k, Number.isInteger(unDec) ? 0 : 1);
+}
+function decouperValeur(valeur, unite) {
+  if (typeof valeur !== "number") return { texte: typeof valeur === "string" ? valeur : "n.s.", unite: "" };
+  const u = normaliser(unite);
+  if (u === "dh" || u === "mad") return { texte: formaterKmad(valeur), unite: "k MAD" };
+  if (u === "jours" || u === "jour") return { texte: formaterNombre(valeur, 1), unite: "j" };
+  if (u === "fois") return { texte: formaterNombre(valeur, 2), unite: "×" };
+  return { texte: formaterNombre(valeur, 2), unite: "" };
+}
+function formaterValeur(valeur, unite) {
+  const d = decouperValeur(valeur, unite);
+  return d.unite ? d.texte + " " + d.unite : d.texte;
+}
+function formaterVariation(valeur, unite) {
+  if (typeof valeur !== "number") return "n.s.";
+  const d = decouperValeur(valeur, unite);
+  const signe = valeur > 0 && d.texte !== "0" && !/^0(,0+)?$/.test(d.texte) ? "+ " : "";
+  return signe + d.texte + (d.unite ? " " + d.unite : "");
+}
+function formaterHeure(date) {
+  if (!date) return "—";
+  return date.getHours() + " h " + String(date.getMinutes()).padStart(2, "0");
+}
+function ilYa(date) {
+  if (!date) return "";
+  const s = Math.max(0, Math.round((Date.now() - date.getTime()) / 1000));
+  if (s < 60) return "il y a " + s + " s";
+  const m = Math.floor(s / 60);
+  if (m < 60) return "il y a " + m + " min";
+  return "à " + formaterHeure(date);
+}
+
+/* ---------- Feux : couleur + icône + mot ---------- */
+function infosFeu(feu) {
+  if (feu === "VERT") return { classe: "vert", mot: "Vert", icone: "check" };
+  if (feu === "AMBRE") return { classe: "orange", mot: "Orange", icone: "alerte" };
+  if (feu === "ROUGE") return { classe: "rouge", mot: "Rouge", icone: "croix" };
+  return { classe: "neutre", mot: "Sans seuil", icone: "tiret" };
+}
+function pastille(feu, prefixe) {
+  const i = infosFeu(feu);
+  return el("span", { classe: "pastille " + i.classe }, [icone(i.icone), (prefixe ? prefixe + " " : "") + i.mot]);
+}
+function nomCourt(libelle) { return String(libelle || "").replace(/\s*\([^()]*\)\s*$/, "").trim(); }
+function kpi(code) { return Etat.modele ? Etat.modele.kpis.find(k => k.code === code) : null; }
+function familleDuKpi(code) { return FAMILLES.find(f => f.codes.includes(code)); }
+
+/* ---------- Routage (hash) : Situation TFT → Famille → KPI ---------- */
+function routeCourante() {
+  const h = decodeURIComponent(location.hash.replace(/^#\/?/, ""));
+  const [type, id] = h.split("/");
+  if (type === "familles") return { page: "familles" };
+  if (type === "famille" && FAMILLES.some(f => f.id === id)) return { page: "famille", id };
+  if (type === "kpi" && FORMAT_ATTENDU.kpi.codes.includes(id)) return { page: "kpi", id };
+  return { page: "situation" };
+}
+const lienSituation = "#/situation", lienFamilles = "#/familles";
+const lienFamille = (id) => "#/famille/" + id;
+const lienKpi = (code) => "#/kpi/" + code;
+
+/* ---------- Menu latéral (ordinateur) ---------- */
+function dessinerMenu() {
+  const nav = document.getElementById("menu");
+  const defilement = nav.scrollTop;
+  vider(nav);
+  const route = routeCourante();
+  nav.appendChild(el("a", { classe: "marque", href: lienSituation, "aria-label": "Atlas Distribution SA, accueil" }, [
+    el("span", { classe: "logo" }, icone("logo")),
+    el("span", { classe: "nom" }, ["Atlas Distribution", el("small", { texte: "TFT IAS 7 · 2027" })])
+  ]));
+  nav.appendChild(el("button", { classe: "bouton-icone seulement-rail", type: "button", style: "margin: 0 18px 8px", "aria-label": "Déplier le menu", onclick: () => nav.classList.toggle("ouvert") }, icone("menu")));
+  nav.appendChild(arbreNavigation(route, false));
+  nav.appendChild(el("div", { classe: "seulement-ouvert", id: "sync-menu" }));
+  nav.appendChild(el("div", { classe: "seulement-rail", id: "sync-rail" }));
+  nav.scrollTop = defilement;
+  dessinerOngletsBas(route);
+  dessinerPanneauxSync();
+}
+
+function arbreNavigation(route, dansVolet) {
+  const liste = el("ul", { classe: "nav-liste" });
+  const actif = (cond) => cond ? "page" : null;
+  liste.appendChild(el("li", { classe: "nav-item" }, el("a", { classe: "nav-lien", href: lienSituation, "aria-current": actif(route.page === "situation"), onclick: fermerVolet }, [icone("situation"), el("span", { classe: "libelle", texte: "Situation TFT" })])));
+  liste.appendChild(el("li", { classe: "nav-item" }, el("a", { classe: "nav-lien", href: lienFamilles, "aria-current": actif(route.page === "familles"), onclick: fermerVolet }, [icone("familles"), el("span", { classe: "libelle", texte: "Les KPI par famille" })])));
+  for (const f of FAMILLES) {
+    const ouverte = Etat.familleOuvertes.has(f.id) || (route.page === "kpi" && f.codes.includes(route.id) && !Etat.familleOuvertes.has("!" + f.id));
+    const idSous = (dansVolet ? "v-" : "m-") + "sous-" + f.id;
+    const feu = Etat.modele ? feuFamille(f, Etat.modele) : "–";
+    const fi = infosFeu(feu);
+    const item = el("li", { classe: "nav-item" });
+    const lienF = el("a", { classe: "nav-lien", href: lienFamille(f.id), "aria-current": actif(route.page === "famille" && route.id === f.id), title: f.titre, onclick: fermerVolet }, [
+      icone(f.icone),
+      Etat.modele ? el("span", { classe: "point-feu " + fi.classe + " icone-feu-rail seulement-rail", "aria-hidden": "true" }) : null,
+      el("span", { classe: "libelle" }, [f.titre + " ", el("span", { classe: "legende", texte: "(" + f.codes.length + ")" })]),
+      Etat.modele ? el("span", { classe: "libelle seulement-ouvert" }, pastille(feu)) : null
+    ]);
+    item.appendChild(el("div", { classe: "nav-famille" }, [
+      lienF,
+      el("button", { classe: "deplier seulement-ouvert", type: "button", "aria-expanded": ouverte ? "true" : "false", "aria-controls": idSous, "aria-label": (ouverte ? "Replier " : "Déplier ") + f.titre,
+        onclick: (e) => { e.preventDefault(); basculerFamille(f.id, ouverte); } }, icone("chevron"))
+    ]));
+    if (ouverte) {
+      const sous = el("ul", { classe: "nav-sous seulement-ouvert", id: idSous });
+      for (const c of f.codes) {
+        const k = kpi(c);
+        sous.appendChild(el("li", {}, el("a", { classe: "nav-lien", href: lienKpi(c), "aria-current": actif(route.page === "kpi" && route.id === c), onclick: fermerVolet }, [
+          el("span", { classe: "code", texte: c }),
+          el("span", { classe: "libelle", texte: k ? nomCourt(k.libelle) : c }),
+          k ? pastille(k.feuN) : null
+        ])));
+      }
+      item.appendChild(sous);
+    }
+    liste.appendChild(item);
+  }
+  if (dansVolet) liste.classList.add("dans-volet");
+  return liste;
+}
+function basculerFamille(id, etaitOuverte) {
+  if (etaitOuverte) { Etat.familleOuvertes.delete(id); Etat.familleOuvertes.add("!" + id); }
+  else { Etat.familleOuvertes.add(id); Etat.familleOuvertes.delete("!" + id); }
+  const actifAvant = document.activeElement && document.activeElement.getAttribute("aria-controls");
+  dessinerMenu();
+  if (document.getElementById("volet").classList.contains("visible")) dessinerVolet();
+  if (actifAvant) {
+    const cible = document.querySelector('[aria-controls="' + actifAvant + '"]') || document.querySelector('[aria-controls="' + actifAvant.replace(/^m-/, "v-") + '"]');
+    if (cible) cible.focus();
+    else {
+      const b = Array.from(document.querySelectorAll(".deplier")).find(x => (x.getAttribute("aria-label") || "").endsWith(FAMILLES.find(f => f.id === id).titre));
+      if (b) b.focus();
+    }
+  }
+}
+
+/* ---------- Téléphone : onglets en bas et volet ---------- */
+function dessinerOngletsBas(route) {
+  const nav = document.getElementById("onglets-bas");
+  vider(nav);
+  nav.appendChild(el("a", { href: lienSituation, "aria-current": route.page === "situation" ? "page" : null }, [icone("situation"), "Situation TFT"]));
+  nav.appendChild(el("button", { type: "button", "aria-current": route.page !== "situation" ? "page" : null, "aria-haspopup": "dialog", onclick: ouvrirVolet }, [icone("familles"), "KPI par famille"]));
+}
+let elementAvantVolet = null;
+function ouvrirVolet() {
+  elementAvantVolet = document.activeElement;
+  dessinerVolet();
+  document.getElementById("volet").classList.add("visible");
+  document.getElementById("volet-fond").classList.add("visible");
+  const b = document.querySelector("#volet .bouton-icone");
+  if (b) b.focus();
+}
+function fermerVolet() {
+  const v = document.getElementById("volet");
+  if (!v.classList.contains("visible")) return;
+  v.classList.remove("visible");
+  document.getElementById("volet-fond").classList.remove("visible");
+  if (elementAvantVolet && document.contains(elementAvantVolet)) elementAvantVolet.focus();
+}
+function dessinerVolet() {
+  const v = document.getElementById("volet");
+  vider(v);
+  v.appendChild(el("div", { classe: "haut" }, [
+    el("h2", { id: "volet-titre", texte: "Les KPI par famille" }),
+    el("button", { classe: "bouton-icone", type: "button", "aria-label": "Fermer", onclick: fermerVolet }, icone("fermer"))
+  ]));
+  v.appendChild(arbreNavigation(routeCourante(), true));
+  v.appendChild(el("div", { id: "sync-volet", style: "margin-top: 16px" }));
+  dessinerPanneauxSync();
+}
+
+/* ---------- Panneau de synchronisation (menu, rail, téléphone, volet) ---------- */
+function texteEtat() {
+  const base = ETATS_SYNC[Sync.statut] || "";
+  if (Sync.statut === "ok" && Sync.mode === "import" && Sync.derniereMaj) return "Fichier importé · mis à jour " + ilYa(Sync.derniereMaj);
+  if (Sync.statut === "ok" && Sync.derniereMaj) return base + " · mis à jour " + ilYa(Sync.derniereMaj);
+  return base;
+}
+function libelleMode() {
+  if (Sync.mode === "direct") return "Direct (suivi du fichier)";
+  if (Sync.mode === "en-ligne") return "En ligne (" + FORMAT_ATTENDU.fichierEnLigne + ")";
+  if (Sync.mode === "import") return "Import (une seule fois)";
+  return "—";
+}
+function infobulleSync() {
+  const lignes = ["Synchronisation : " + (Sync.actif ? "activée" : "désactivée"), texteEtat()];
+  if (Sync.nomFichier) lignes.push("Fichier : " + Sync.nomFichier);
+  lignes.push("Mode : " + libelleMode());
+  if (Sync.mode === "en-ligne" && !estLocal) lignes.push("GitHub peut mettre jusqu'à 10 minutes pour publier une nouvelle version du fichier.");
+  if (Sync.raison) lignes.push(Sync.raison);
+  return lignes.join("\n");
+}
+function interrupteur(lieu) {
+  return el("button", { classe: "interrupteur", type: "button", role: "switch", "aria-checked": Sync.actif ? "true" : "false", "aria-label": "Synchronisation", dataset: { cle: "interrupteur-" + lieu }, onclick: basculerSynchro });
+}
+function lignesEtat(compact) {
+  return el("div", { classe: "etat", title: infobulleSync() }, [
+    el("span", { classe: "point-etat " + Sync.statut, "aria-hidden": "true" }),
+    el("span", { classe: "texte" }, [el("span", { classe: "mot", "data-etat-texte": "1", texte: compact ? (ETATS_SYNC[Sync.statut] || "") : texteEtat() })])
+  ]);
+}
+function boutonsSync(lieu) {
+  const actions = el("div", { classe: "sync-actions" });
+  if (Sync.statut === "reconnexion") actions.appendChild(el("button", { classe: "bouton petit principal plein", type: "button", dataset: { cle: "reconnecter-" + lieu }, onclick: reconnecter }, [icone("reessayer"), "Reconnecter"]));
+  if (supporteAccesDirect) actions.appendChild(el("button", { classe: "bouton petit plein", type: "button", dataset: { cle: "connecter-" + lieu }, onclick: connecterFichier }, [icone("lien"), "Connecter mon fichier Excel"]));
+  actions.appendChild(el("button", { classe: "bouton petit plein", type: "button", dataset: { cle: "importer-" + lieu }, onclick: ouvrirImport }, [icone("importer"), "Importer un fichier"]));
+  if (Sync.poignee || Sync.mode || Etat.modele) actions.appendChild(el("button", { classe: "bouton petit discret plein", type: "button", dataset: { cle: "effacer-" + lieu }, onclick: effacerDonnees }, [icone("corbeille"), "Effacer mes données"]));
+  return actions;
+}
+function panneauComplet(lieu) {
+  const p = el("section", { classe: "sync verre", "aria-label": "Synchronisation avec Excel" });
+  p.appendChild(el("div", { classe: "sync-entete" }, [el("span", { classe: "titre" }, [icone("sync"), "Synchronisation"]), interrupteur(lieu)]));
+  p.appendChild(lignesEtat(false));
+  if (Sync.raison && (Sync.statut === "erreur" || Sync.statut === "reconnexion")) p.appendChild(el("p", { classe: "sync-raison", texte: Sync.raison }));
+  const dl = el("dl", { classe: "sync-infos" });
+  dl.appendChild(el("dt", { texte: "Fichier" })); dl.appendChild(el("dd", { texte: Sync.nomFichier || "—" }));
+  dl.appendChild(el("dt", { texte: "Mise à jour" })); dl.appendChild(el("dd", { texte: Sync.derniereMaj ? formaterHeure(Sync.derniereMaj) : "—" }));
+  dl.appendChild(el("dt", { texte: "Mode" })); dl.appendChild(el("dd", { texte: libelleMode() }));
+  p.appendChild(dl);
+  p.appendChild(boutonsSync(lieu));
+  if (!supporteAccesDirect) p.appendChild(el("p", { classe: "sync-note", texte: "Le suivi en direct fonctionne avec Chrome ou Edge sur ordinateur. Ici, importez à nouveau le fichier après chaque modification." }));
+  if (Sync.mode === "en-ligne" && !estLocal) p.appendChild(el("p", { classe: "sync-note", texte: "Version en ligne relue toutes les 60 s. GitHub peut mettre jusqu'à 10 minutes pour publier une nouvelle version du fichier." }));
+  return p;
+}
+function dessinerPanneauxSync() {
+  const actif = document.activeElement;
+  const cleFocus = actif && actif.dataset ? actif.dataset.cle : null;
+  const nav = document.getElementById("menu");
+  let auClavier = false;
+  try { auClavier = !!actif && actif.matches(":focus-visible"); } catch (e) { auClavier = true; }
+  if (cleFocus && nav && nav.contains(actif) && auClavier) garderMenuOuvert(nav);
+  const menu = document.getElementById("sync-menu");
+  if (menu) { vider(menu); menu.appendChild(panneauComplet("menu")); }
+  const rail = document.getElementById("sync-rail");
+  if (rail) {
+    vider(rail);
+    rail.appendChild(el("div", { classe: "sync-rail", role: "img", title: infobulleSync(), "aria-label": infobulleSync() }, [
+      icone("sync"), el("span", { classe: "point-etat " + Sync.statut, "aria-hidden": "true" })
+    ]));
+  }
+  const volet = document.getElementById("sync-volet");
+  if (volet) { vider(volet); volet.appendChild(panneauComplet("volet")); }
+  const bande = document.getElementById("bande-mobile");
+  if (bande) {
+    vider(bande);
+    bande.appendChild(lignesEtat(true));
+    bande.appendChild(interrupteur("bande"));
+    bande.appendChild(el("button", { classe: "bouton-icone", type: "button", "aria-label": supporteAccesDirect ? "Connecter mon fichier Excel" : "Importer un fichier", onclick: supporteAccesDirect ? connecterFichier : ouvrirImport }, icone(supporteAccesDirect ? "lien" : "importer")));
+    if (Sync.statut === "reconnexion") bande.appendChild(el("button", { classe: "bouton petit principal", type: "button", onclick: reconnecter, texte: "Reconnecter" }));
+  }
+  if (cleFocus && !document.contains(actif)) {
+    const cible = document.querySelector('[data-cle="' + cleFocus + '"]');
+    if (cible) cible.focus({ preventScroll: true });
+  }
+}
+/* Le menu reste déplié pendant qu'un de ses boutons est redessiné, pour ne pas perdre le focus clavier */
+function garderMenuOuvert(nav) {
+  nav.classList.add("ouvert");
+  if (nav.dataset.surveille) return;
+  nav.dataset.surveille = "1";
+  nav.addEventListener("focusout", (e) => {
+    if (e.relatedTarget && nav.contains(e.relatedTarget)) return;
+    setTimeout(() => { if (!nav.contains(document.activeElement)) nav.classList.remove("ouvert"); }, 0);
+  });
+}
+/* Le texte « il y a 12 s » avance chaque seconde, sans redessiner la page */
+setInterval(() => {
+  if (Sync.statut !== "ok") return;
+  document.querySelectorAll("#sync-menu [data-etat-texte], #sync-volet [data-etat-texte]").forEach(n => { n.textContent = texteEtat(); });
+}, 1000);
+
+/* ---------- Toasts et alertes ---------- */
+function afficherToast(texte, type) {
+  const zone = document.getElementById("toasts");
+  const t = el("div", { classe: "toast verre" + (type ? " " + type : "") }, [icone(type === "erreur" ? "alerte" : "check"), el("span", { texte })]);
+  zone.appendChild(t);
+  while (zone.children.length > 3) zone.removeChild(zone.firstChild);
+  setTimeout(() => { if (t.parentNode) t.parentNode.removeChild(t); }, 5000);
+}
+function afficherAlerte(erreur, avertissement) {
+  Etat.alerte = { titre: erreur.message, details: erreur.details || [], avertissement: !!avertissement };
+  dessinerAlerte();
+}
+function effacerAlerte() { Etat.alerte = null; dessinerAlerte(); }
+function dessinerAlerte() {
+  const zone = document.getElementById("zone-alerte");
+  if (!zone) return;
+  vider(zone);
+  const a = Etat.alerte;
+  if (!a) return;
+  if (!Etat.modele && Etat.erreurInitiale && !a.avertissement) return; /* la page d'erreur affiche déjà le détail */
+  const details = a.details.slice(0, 8);
+  if (a.details.length > 8) details.push("… et " + (a.details.length - 8) + " autres remarques.");
+  zone.appendChild(el("section", { classe: "alerte verre" + (a.avertissement ? " avertissement" : ""), role: a.avertissement ? "status" : "alert" }, [
+    el("div", { classe: "haut" }, [
+      el("h2", {}, [icone("alerte"), a.titre]),
+      el("button", { classe: "bouton-icone", type: "button", "aria-label": "Fermer l'alerte", onclick: effacerAlerte }, icone("fermer"))
+    ]),
+    !a.avertissement && Etat.modele ? el("p", { classe: "legende", style: "margin-top: 8px", texte: "Les dernières données valides restent affichées." }) : null,
+    details.length ? el("ul", {}, details.map(d => el("li", { texte: d }))) : null
+  ]));
+}
+
+/* ---------- Application d'une nouvelle version des données ---------- */
+function appliquerModele(modele, empreinte) {
+  const ancien = Etat.modele;
+  const nbModifs = ancien ? compterDifferences(ancien, modele) : 0;
+  const modifies = kpiModifies(ancien, modele);
+  Etat.modele = modele;
+  Etat.empreinte = empreinte;
+  Etat.erreurInitiale = null;
+  Etat.chargement = false;
+  const defX = window.scrollX, defY = window.scrollY;
+  const focusCle = document.activeElement && document.activeElement.dataset ? document.activeElement.dataset.cle : null;
+  dessinerMenu();
+  dessinerPage({ conserverDefilement: true });
+  window.scrollTo(defX, defY);
+  if (focusCle) { const n = document.querySelector('[data-cle="' + focusCle + '"]'); if (n) n.focus({ preventScroll: true }); }
+  if (ancien) {
+    afficherToast("Données mises à jour à " + formaterHeure(new Date()) + " : " + nbModifs + " valeur" + (nbModifs > 1 ? "s" : "") + " modifiée" + (nbModifs > 1 ? "s" : "") + ".");
+    if (!reduireAnimations()) illuminer(modifies);
+  } else {
+    afficherToast("Données chargées : " + modele.kpis.length + " KPI et " + modele.tft.lignes.filter(l => l.code).length + " lignes du TFT.");
+  }
+}
+function illuminer(codes) {
+  for (const c of codes) {
+    document.querySelectorAll('[data-kpi="' + c + '"]').forEach(n => {
+      n.classList.add("eclat");
+      setTimeout(() => n.classList.remove("eclat"), REGLAGES.dureeEclat);
+    });
+  }
+}
+
+/* ---------- Pages ---------- */
+function detruireGraphiques() {
+  for (const o of Etat.observateurs) o.disconnect();
+  for (const g of Etat.graphiques) { try { g.dispose(); } catch (e) { /* déjà détruit */ } }
+  Etat.graphiques = []; Etat.observateurs = [];
+}
+function dessinerPage(options) {
+  const main = document.getElementById("contenu");
+  detruireGraphiques();
+  vider(main);
+  main.appendChild(el("div", { id: "zone-alerte" }));
+  dessinerAlerte();
+  const route = routeCourante();
+  if (Etat.chargement && !Etat.modele && !Etat.erreurInitiale) { main.appendChild(pageChargement()); return; }
+  if (!Etat.modele) { main.appendChild(Etat.erreurInitiale ? pageErreur(Etat.erreurInitiale) : pageVide()); return; }
+  if (normaliser(Etat.modele.controles.statut) !== "conforme") {
+    document.body.classList.add("disjoncte");
+    main.appendChild(pageDisjoncteur(Etat.modele.controles));
+    return;
+  }
+  document.body.classList.remove("disjoncte");
+  if (route.page === "situation") pageSituation(main);
+  else if (route.page === "familles") pageFamilles(main);
+  else if (route.page === "famille") pageFamille(main, FAMILLES.find(f => f.id === route.id));
+  else if (route.page === "kpi") pageKpi(main, route.id);
+  main.appendChild(piedDePage());
+  Etat.dejaAnime.add(route.page + (route.id || ""));
+}
+
+function pageChargement() {
+  const s = el("div", { "aria-busy": "true", "aria-label": "Chargement des données" });
+  s.appendChild(el("p", { classe: "visuellement-cache", texte: "Chargement des données…" }));
+  s.appendChild(el("div", { classe: "squelette", style: "height: 280px; border-radius: 32px" }));
+  const g = el("div", { classe: "grille-kpi", style: "margin-top: 32px" });
+  for (let i = 0; i < 4; i++) g.appendChild(el("div", { classe: "squelette", style: "height: 260px" }));
+  s.appendChild(g);
+  return s;
+}
+function pageVide() {
+  const boite = el("section", { classe: "etat-vide verre" });
+  boite.appendChild(icone("fichier", "grand"));
+  boite.appendChild(el("h1", { id: "titre-page", tabindex: "-1", texte: "Connectez votre fichier Excel" }));
+  boite.appendChild(el("p", { texte: "Le tableau de bord lit le fichier du TFT d'Atlas Distribution SA directement dans votre navigateur. Aucune donnée n'est envoyée sur Internet." }));
+  boite.appendChild(el("button", { classe: "bouton principal", type: "button", onclick: supporteAccesDirect ? connecterFichier : ouvrirImport }, [icone(supporteAccesDirect ? "lien" : "importer"), supporteAccesDirect ? "Connecter mon fichier Excel" : "Importer un fichier"]));
+  const zone = el("div", { classe: "zone-depot", role: "button", tabindex: "0", "aria-label": "Déposer un fichier Excel ou parcourir",
+    onclick: ouvrirImport, onkeydown: (e) => { if (e.key === "Enter" || e.key === " ") { e.preventDefault(); ouvrirImport(); } } },
+    ["Déposez votre fichier ici (.xlsx, .xlsm, .xls ou .csv, 10 Mo au maximum), ou ", el("u", { texte: "parcourez vos dossiers" }), "."]);
+  boite.appendChild(zone);
+  if (!supporteAccesDirect) boite.appendChild(el("p", { classe: "mode-c", texte: "Le suivi en direct fonctionne avec Chrome ou Edge sur ordinateur. Ici, importez à nouveau le fichier après chaque modification." }));
+  if (Sync.statut === "reconnexion") boite.appendChild(el("button", { classe: "bouton", type: "button", onclick: reconnecter }, [icone("reessayer"), "Reconnecter « " + (Sync.nomFichier || "le fichier") + " »"]));
+  return boite;
+}
+function pageErreur(erreur) {
+  const boite = el("section", { classe: "etat-erreur verre", role: "alert" });
+  boite.appendChild(el("h1", { id: "titre-page", tabindex: "-1", texte: "Le fichier n'a pas pu être lu" }));
+  boite.appendChild(el("p", { texte: erreur.message }));
+  if (erreur.details && erreur.details.length) boite.appendChild(el("ul", { style: "text-align: left; color: #fff" }, erreur.details.slice(0, 8).map(d => el("li", { texte: d }))));
+  boite.appendChild(el("button", { classe: "bouton principal", type: "button", onclick: () => { Sync.signature = null; if (Sync.mode === "direct" || Sync.mode === "en-ligne") verifier(); else ouvrirImport(); } }, [icone("reessayer"), "Réessayer"]));
+  return boite;
+}
+function pageDisjoncteur(c) {
+  const enEcart = c.enEcart !== null ? c.enEcart : "?";
+  const total = c.total !== null ? c.total : "?";
+  return el("section", { classe: "disjoncteur verre", role: "alert" }, [
+    icone("alerte", "grand"),
+    el("h1", { id: "titre-page", tabindex: "-1", texte: "Données non fiables : " + enEcart + (enEcart === 1 ? " contrôle" : " contrôles") + " en écart sur " + total }),
+    el("p", { texte: "Le statut global de l'onglet CONTROLES est « " + (c.statut || "vide") + " » au lieu de « CONFORME ». Les chiffres sont masqués jusqu'à la correction du fichier." }),
+    el("p", { classe: "legende", texte: "Corrigez le classeur dans Excel puis enregistrez : l'application se mettra à jour toute seule si la synchronisation est activée." })
+  ]);
+}
+
+function ariane(etapes) {
+  const ol = el("ol");
+  etapes.forEach((e, i) => {
+    const dernier = i === etapes.length - 1;
+    ol.appendChild(el("li", {}, dernier ? el("span", { "aria-current": "page", texte: e.texte }) : el("a", { href: e.lien, texte: e.texte })));
+  });
+  return el("nav", { classe: "ariane", "aria-label": "Fil d'Ariane" }, ol);
+}
+
+/* Écran 1 · Situation TFT */
+function pageSituation(main) {
+  const m = Etat.modele, t = m.totaux;
+  main.appendChild(ariane([{ texte: "Situation TFT" }]));
+  const message = m.message || ("En 2027, le flux opérationnel est de " + formaterValeur(t.OT.n, "DH") + ", le flux d'investissement de " + formaterValeur(t.IT.n, "DH") + " et le flux de financement de " + formaterValeur(t.FT.n, "DH") + ".");
+  const heros = el("section", { classe: "heros verre", "aria-labelledby": "titre-page" }, [
+    el("p", { classe: "surtitre", texte: "Atlas Distribution SA · Casablanca · TFT IAS 7 · 2027 face à 2026 · en milliers de dirhams" }),
+    el("h1", { id: "titre-page", tabindex: "-1", texte: m.titre }),
+    el("p", { classe: "message", texte: message }),
+    el("div", { classe: "reponse" }, [
+      blocHeros("Trésorerie nette à l'ouverture", t.T0.n, "T0"),
+      el("span", { classe: "fleche", "aria-hidden": "true", texte: "→" }),
+      blocHeros("Trésorerie nette à la clôture", t.T1.n, "T1"),
+      blocHeros("Variation de la trésorerie", t.V.n, "V")
+    ]),
+    el("div", { classe: "pied" }, [
+      el("span", { classe: "pastille vert" }, [icone("bouclier"), "Conforme"]),
+      el("span", { classe: "legende", texte: "Contrôles : " + (m.controles.conformes !== null ? m.controles.conformes : "?") + " sur " + (m.controles.total !== null ? m.controles.total : "?") + " conformes · statut global : " + m.controles.statut })
+    ])
+  ]);
+  main.appendChild(heros);
+
+  /* Les 3 flux et la trésorerie */
+  const flux = el("section", { "aria-labelledby": "titre-flux" }, [
+    el("div", { classe: "section-titre" }, [el("h2", { id: "titre-flux", texte: "Les flux de trésorerie 2027" }), el("p", { texte: "Lus dans l'onglet TFT (noms définis TFT_…_2027)." })])
+  ]);
+  const g = el("div", { classe: "grille-flux" });
+  for (const c of ["OT", "IT", "FT", "V", "T0", "T1"]) {
+    const v = decouperValeur(t[c].n, "DH");
+    g.appendChild(el("article", { classe: "tuile verre" + (c === "T1" || c === "V" ? " total" : ""), dataset: { kpi: c } }, [
+      el("div", { classe: "code", texte: c }),
+      el("div", { classe: "nom", texte: TFT_NOMS[c] }),
+      el("div", { classe: "valeur chiffre" }, [compteur(t[c].n, "DH", v.texte), el("span", { classe: "unite", texte: v.unite })]),
+      el("div", { classe: "legende" }, ["2026 : ", el("span", { classe: "num", texte: formaterValeur(t[c].n1, "DH") })])
+    ]));
+  }
+  flux.appendChild(g);
+  main.appendChild(flux);
+
+  /* Les 6 cartes de l'onglet DASHBOARD */
+  const sec = el("section", { "aria-labelledby": "titre-cartes" }, [
+    el("div", { classe: "section-titre" }, [el("h2", { id: "titre-cartes", texte: "Les 6 indicateurs clés" }), el("p", { texte: "Valeurs et feux lus dans l'onglet KPI." })])
+  ]);
+  const gk = el("div", { classe: "grille-kpi" });
+  for (const c of CARTES_SITUATION) { const k = kpi(c.code); if (k) gk.appendChild(carteKpi(k, c.titre)); }
+  sec.appendChild(gk);
+  main.appendChild(sec);
+
+  /* Flowcharts */
+  const flow = el("section", { "aria-labelledby": "titre-flow" }, [
+    el("div", { classe: "section-titre" }, [el("h2", { id: "titre-flow", texte: "Les flowcharts du cash" }), legendeCouleurs()])
+  ]);
+  const pCascade = panneauGraphique("Cascade de la trésorerie nette", "Trésorerie nette 2026 → flux opérationnel → investissement → financement → trésorerie nette 2027 (onglet KPI, section 4).", "graphique haut", "Cascade de la trésorerie nette en milliers de dirhams : " + m.cascade.map(b => b.barre + " " + formaterKmad(b.fin)).join(" ; "));
+  flow.appendChild(pCascade.panneau);
+  const pSankey = panneauGraphique("D'où vient l'argent, où il va", "Sources et emplois du cash 2027, lus dans l'onglet TFT.", "graphique haut", "Diagramme de Sankey des sources et des emplois du cash 2027.");
+  flow.appendChild(el("div", { style: "margin-top: 24px" }, pSankey.panneau));
+  const grille2 = el("div", { classe: "grille-2", style: "margin-top: 24px" });
+  const pJauges = el("section", { classe: "panneau verre", "aria-labelledby": "titre-jauges" }, [
+    el("div", { classe: "entete" }, [el("div", {}, [el("h3", { id: "titre-jauges", texte: "Jauges : face à la cible et au plafond" }), el("p", { texte: "Onglet KPI, section 4 (« Jauge »)." })])])
+  ]);
+  const gj = el("div", { classe: "grille-jauges" });
+  pJauges.appendChild(gj);
+  const pEntonnoir = panneauGraphique("Entonnoir du cash", "EBITDA → flux opérationnel → après loyers → après service des emprunts (onglet KPI, section 4).", "graphique", "Entonnoir : " + m.entonnoir.map(e => e.etape + " " + formaterKmad(e.valeur)).join(" ; "));
+  grille2.appendChild(pJauges);
+  grille2.appendChild(pEntonnoir.panneau);
+  flow.appendChild(grille2);
+  main.appendChild(flow);
+
+  /* Recommandations au DG */
+  const recos = m.recos.length ? m.recos : genererPointsAttention(m);
+  const secR = el("section", { "aria-labelledby": "titre-recos" }, [
+    el("div", { classe: "section-titre" }, [el("h2", { id: "titre-recos", texte: m.recos.length ? "Les 3 recommandations au DG" : "Points d'attention" }),
+      el("p", { texte: m.recos.length ? "Onglet KPI, section 5, recopiées mot pour mot." : "Générés à partir des chiffres : les recommandations sont absentes du fichier." })])
+  ]);
+  secR.appendChild(el("ol", { classe: "recos" }, recos.map((r, i) => el("li", { classe: "verre" }, [el("span", { classe: "numero", "aria-hidden": "true", texte: String(i + 1) }), el("p", { texte: r })]))));
+  if (m.noteRecos) secR.appendChild(el("p", { classe: "note-recos", texte: m.noteRecos }));
+  main.appendChild(secR);
+
+  /* Tableau premium du TFT */
+  main.appendChild(tableauTft(m));
+
+  /* Graphiques (après insertion dans la page) */
+  requestAnimationFrame(() => {
+    graphiqueCascade(pCascade.zone, m.cascade);
+    graphiqueSankey(pSankey.zone, m.tft.parCode);
+    graphiqueJauges(gj, m);
+    graphiqueEntonnoir(pEntonnoir.zone, m.entonnoir);
+  });
+}
+function blocHeros(etiquette, valeur, code) {
+  const v = decouperValeur(valeur, "DH");
+  return el("div", { classe: "bloc", dataset: { kpi: code } }, [
+    el("div", { classe: "etiquette", texte: etiquette }),
+    el("div", { classe: "valeur chiffre" }, [compteur(valeur, "DH", v.texte), el("span", { classe: "unite", texte: v.unite })])
+  ]);
+}
+function legendeCouleurs() {
+  return el("div", { classe: "legende-couleurs", "aria-label": "Légende des couleurs" }, [
+    el("span", {}, [el("i", { style: "background:#E0AE28" }), "Entrées"]),
+    el("span", {}, [el("i", { style: "background:#A3263B" }), "Sorties"]),
+    el("span", {}, [el("i", { style: "background:#FFFFFF" }), "Totaux"])
+  ]);
+}
+function panneauGraphique(titre, sousTitre, classe, description) {
+  const id = "g-" + Math.random().toString(36).slice(2, 9);
+  const zone = el("div", { classe, role: "img", "aria-label": description });
+  const panneau = el("section", { classe: "panneau verre", "aria-labelledby": id }, [
+    el("div", { classe: "entete" }, [el("div", {}, [el("h3", { id, texte: titre }), el("p", { texte: sousTitre })])]),
+    zone
+  ]);
+  return { panneau, zone };
+}
+
+/* Chiffres qui montent (sauf si « réduire les animations ») */
+function compteur(valeur, unite, texteFinal) {
+  const span = el("span", { texte: texteFinal });
+  const cle = routeCourante().page + (routeCourante().id || "");
+  if (typeof valeur !== "number" || reduireAnimations() || Etat.dejaAnime.has(cle)) return span;
+  const debut = performance.now(), duree = 800;
+  const etape = (maintenant) => {
+    const p = Math.min(1, (maintenant - debut) / duree);
+    const e = 1 - Math.pow(1 - p, 3);
+    span.textContent = p < 1 ? decouperValeur(valeur * e, unite).texte : texteFinal;
+    if (p < 1 && document.contains(span)) requestAnimationFrame(etape);
+  };
+  requestAnimationFrame(etape);
+  return span;
+}
+
+/* Carte KPI très grand format */
+function carteKpi(k, titre) {
+  const v = decouperValeur(k.n, k.unite);
+  const idBulle = "f-" + k.code + "-" + Math.random().toString(36).slice(2, 7);
+  return el("article", { classe: "carte-kpi verre", dataset: { kpi: k.code }, "aria-labelledby": "t-" + idBulle }, [
+    el("div", { classe: "tete" }, [
+      el("h3", { id: "t-" + idBulle }, [el("span", { classe: "code", texte: k.code }), el("a", { href: lienKpi(k.code), dataset: { cle: "carte-" + k.code }, texte: titre || nomCourt(k.libelle) })]),
+      el("div", { classe: "actions-tete" }, [
+        el("button", { classe: "info", type: "button", "aria-label": "Formule de " + (titre || nomCourt(k.libelle)), "aria-describedby": idBulle,
+          onclick: (e) => { const b = e.currentTarget; b.setAttribute("aria-expanded", b.getAttribute("aria-expanded") === "true" ? "false" : "true"); },
+          onblur: (e) => e.currentTarget.setAttribute("aria-expanded", "false") }, [
+          icone("info"), el("span", { classe: "bulle", role: "tooltip", id: idBulle }, [el("strong", { texte: "Formule" }), FORMULES[k.code]])
+        ]),
+        pastille(k.feuN)
+      ])
+    ]),
+    el("div", { classe: "valeur chiffre" }, [compteur(k.n, k.unite, v.texte), v.unite ? el("span", { classe: "unite", texte: v.unite }) : null]),
+    el("div", { classe: "compare" }, [
+      el("span", {}, [el("span", { classe: "etq", texte: "2026" }), el("span", { classe: "num", texte: formaterValeur(k.n1, k.unite) })]),
+      el("span", {}, [el("span", { classe: "etq", texte: "Variation" }), el("span", { classe: "var", texte: formaterVariation(k.variation, k.unite) })])
+    ]),
+    el("div", { classe: "pied" }, [
+      el("div", {}, [sparkline(k), el("div", { classe: "sparkline-legende", texte: "2026 → 2027" })]),
+      el("span", { classe: "legende", texte: "Feu 2026 : " + infosFeu(k.feuN1).mot })
+    ])
+  ]);
+}
+
+/* Sparkline : uniquement les années présentes dans le fichier (2 points), aucun point inventé */
+function sparkline(k) {
+  const points = [k.n1, k.n].filter(x => typeof x === "number");
+  const svg = document.createElementNS(SVG_NS, "svg");
+  svg.setAttribute("class", "sparkline");
+  svg.setAttribute("viewBox", "0 0 132 34");
+  svg.setAttribute("role", "img");
+  svg.setAttribute("aria-label", "Tendance 2026 → 2027 : " + formaterValeur(k.n1, k.unite) + " puis " + formaterValeur(k.n, k.unite));
+  if (points.length === 0) return svg;
+  const min = Math.min(...points), max = Math.max(...points);
+  const y = (v) => max === min ? 17 : 30 - (v - min) / (max - min) * 26;
+  const x = (i) => points.length === 1 ? 126 : 6 + i * (120 / (points.length - 1));
+  const ligne = document.createElementNS(SVG_NS, "polyline");
+  ligne.setAttribute("class", "ligne");
+  ligne.setAttribute("points", points.map((v, i) => x(i).toFixed(1) + "," + y(v).toFixed(1)).join(" "));
+  svg.appendChild(ligne);
+  const point = document.createElementNS(SVG_NS, "circle");
+  point.setAttribute("class", "point");
+  point.setAttribute("cx", x(points.length - 1).toFixed(1));
+  point.setAttribute("cy", y(points[points.length - 1]).toFixed(1));
+  point.setAttribute("r", "2.6");
+  svg.appendChild(point);
+  return svg;
+}
+
+/* Tableau premium du TFT (méthode indirecte, ordre du TFT, export Excel) */
+function tableauTft(m) {
+  const sec = el("section", { "aria-labelledby": "titre-tft" });
+  sec.appendChild(el("div", { classe: "section-titre" }, [
+    el("div", {}, [el("h2", { id: "titre-tft", texte: "Le tableau des flux de trésorerie" }), el("p", { classe: "legende", style: "margin-top: 4px", texte: m.titreTft || "" })]),
+    el("button", { classe: "bouton principal", type: "button", dataset: { cle: "export-tft" }, onclick: () => exporterTft(m) }, [icone("exporter"), "Exporter en Excel"])
+  ]));
+  const table = el("table", { classe: "tft" });
+  table.appendChild(el("caption", { texte: "Méthode indirecte (IAS 7, modifiée par IFRS 18) · lignes O1 à T1 · montants en milliers de dirhams (k MAD)" }));
+  table.appendChild(el("thead", {}, el("tr", {}, [
+    el("th", { scope: "col", texte: "Ligne" }), el("th", { scope: "col", texte: "Libellé" }),
+    el("th", { scope: "col", classe: "montant", texte: "2027" }), el("th", { scope: "col", classe: "montant", texte: "2026" })
+  ])));
+  const corps = el("tbody");
+  for (const l of m.tft.lignes) {
+    if (!l.code) {
+      corps.appendChild(el("tr", { classe: l.niveau }, [el("td", { classe: "code" }), el("td", { classe: "libelle", colspan: "3", texte: l.libelle })]));
+      continue;
+    }
+    corps.appendChild(el("tr", { classe: [l.niveau, l.retrait ? "retrait" : ""].join(" ").trim(), dataset: { kpi: l.code } }, [
+      el("td", { classe: "code", texte: l.code }),
+      el("th", { scope: "row", classe: "libelle", style: "font-weight: inherit; text-align: left", texte: l.libelle }),
+      el("td", { classe: "montant", texte: formaterKmad(l.n, true) }),
+      el("td", { classe: "montant", texte: formaterKmad(l.n1, true) })
+    ]));
+  }
+  table.appendChild(corps);
+  sec.appendChild(el("div", { classe: "tableau-cadre verre" }, table));
+  return sec;
+}
+function exporterTft(m) {
+  try {
+    const lignes = [["Ligne", "Libellé", "2027 (k MAD)", "2026 (k MAD)"]];
+    for (const l of m.tft.lignes) {
+      if (!l.code) { lignes.push(["", neutraliserCellule(l.libelle), "", ""]); continue; }
+      lignes.push([neutraliserCellule(l.code), neutraliserCellule(l.libelle), Math.round(l.n / 100) / 10, Math.round(l.n1 / 100) / 10]);
+    }
+    lignes.push([]);
+    lignes.push([neutraliserCellule("Source : " + (Sync.nomFichier || "fichier connecté") + " · export du " + new Date().toLocaleDateString("fr-FR"))]);
+    const ws = XLSX.utils.aoa_to_sheet(lignes);
+    ws["!cols"] = [{ wch: 8 }, { wch: 64 }, { wch: 16 }, { wch: 16 }];
+    const wb = XLSX.utils.book_new();
+    XLSX.utils.book_append_sheet(wb, ws, "TFT 2027");
+    XLSX.writeFile(wb, "TFT-ATLAS-2027.xlsx", { compression: true });
+    afficherToast("Export Excel prêt : TFT-ATLAS-2027.xlsx.");
+  } catch (e) {
+    afficherToast("L'export n'a pas pu être créé. Réessayez.", "erreur");
+  }
+}
+
+/* Écran 2 · Les KPI par famille */
+function pageFamilles(main) {
+  const m = Etat.modele;
+  main.appendChild(ariane([{ texte: "Situation TFT", lien: lienSituation }, { texte: "Les KPI par famille" }]));
+  main.appendChild(el("header", { classe: "tete-page" }, [
+    el("h1", { id: "titre-page", tabindex: "-1", texte: "Les KPI par famille" }),
+    el("p", { classe: "intro", texte: "Cinq familles, quatorze KPI lus dans l'onglet KPI. Une famille prend le feu le plus sévère de ses KPI." })
+  ]));
+  const grille = el("div", { classe: "grille-familles" });
+  for (const f of FAMILLES) {
+    const feu = feuFamille(f, m);
+    grille.appendChild(el("a", { classe: "carte-famille verre", href: lienFamille(f.id), dataset: { cle: "fam-" + f.id } }, [
+      el("div", { classe: "haut" }, [icone(f.icone), pastille(feu)]),
+      el("h2", { style: "font-size: 20px", texte: f.titre }),
+      el("ul", {}, f.codes.map(c => { const k = kpi(c); return el("li", { dataset: { kpi: c } }, [el("span", { texte: c + " " + nomCourt(k.libelle) }), el("span", { classe: "num", texte: formaterValeur(k.n, k.unite) })]); }))
+    ]));
+  }
+  main.appendChild(grille);
+  const pRadar = panneauGraphique("Radar : score 2027 face à 2026, avec la cible", "Les 6 axes de l'onglet KPI, section 4 (« Radar »). Score de 0 à 100 ; la cible vaut 100.", "graphique haut", "Radar des scores : " + m.radar.map(r => r.axe + " " + r.scoreN + " en 2027, " + r.scoreN1 + " en 2026").join(" ; "));
+  main.appendChild(pRadar.panneau);
+  requestAnimationFrame(() => graphiqueRadar(pRadar.zone, m.radar));
+}
+
+/* Page d'une famille */
+function pageFamille(main, f) {
+  const m = Etat.modele;
+  main.appendChild(ariane([{ texte: "Situation TFT", lien: lienSituation }, { texte: "Les KPI par famille", lien: lienFamilles }, { texte: f.titre }]));
+  main.appendChild(el("header", { classe: "tete-page" }, [
+    el("div", { classe: "ligne" }, [el("h1", { id: "titre-page", tabindex: "-1", texte: f.titre }), pastille(feuFamille(f, m))]),
+    el("p", { classe: "intro", texte: f.codes.length + " KPI · le feu de la famille est le plus sévère de ses KPI." })
+  ]));
+  const g = el("div", { classe: "grille-kpi" });
+  for (const c of f.codes) g.appendChild(carteKpi(kpi(c)));
+  main.appendChild(g);
+  if (f.id === "bfr") {
+    const p = panneauGraphique("Bullet chart : les délais face à leur seuil vert", "Délai clients, délai stocks et délai fournisseurs 2027 (onglet KPI, section 5). Le trait blanc marque le seuil vert.", "graphique", "Délais 2027 : " + m.bullet.map(b => b.poste + " " + formaterNombre(b.valeur, 1) + " jours pour un seuil vert de " + formaterNombre(b.seuil, 0)).join(" ; "));
+    main.appendChild(p.panneau);
+    requestAnimationFrame(() => graphiqueBullet(p.zone, m.bullet, m.kpis));
+  }
+}
+
+/* Page d'un KPI */
+function pageKpi(main, code) {
+  const m = Etat.modele, k = kpi(code), f = familleDuKpi(code);
+  const verif = comparerRecalcul(m);
+  main.appendChild(ariane([{ texte: "Situation TFT", lien: lienSituation }, { texte: f.titre, lien: lienFamille(f.id) }, { texte: code + " " + nomCourt(k.libelle) }]));
+  main.appendChild(el("header", { classe: "tete-page" }, [
+    el("p", { classe: "surtitre", texte: code + " · " + f.titre }),
+    el("h1", { id: "titre-page", tabindex: "-1", texte: k.libelle })
+  ]));
+  const v = decouperValeur(k.n, k.unite);
+  const carte = el("article", { classe: "carte-kpi verre", dataset: { kpi: code } }, [
+    el("div", { classe: "tete" }, [
+      el("h2", { style: "font-size: 18px" }, "Valeur 2027"),
+      el("button", { classe: "info", type: "button", "aria-label": "Formule de " + nomCourt(k.libelle), "aria-describedby": "bulle-kpi",
+        onclick: (e) => { const b = e.currentTarget; b.setAttribute("aria-expanded", b.getAttribute("aria-expanded") === "true" ? "false" : "true"); },
+        onblur: (e) => e.currentTarget.setAttribute("aria-expanded", "false") }, [icone("info"), el("span", { classe: "bulle", role: "tooltip", id: "bulle-kpi" }, [el("strong", { texte: "Formule" }), FORMULES[code]])])
+    ]),
+    el("div", { classe: "valeur chiffre" }, [compteur(k.n, k.unite, v.texte), v.unite ? el("span", { classe: "unite", texte: v.unite }) : null]),
+    el("div", { classe: "compare" }, [
+      el("span", {}, [el("span", { classe: "etq", texte: "2026" }), el("span", { classe: "num", texte: formaterValeur(k.n1, k.unite) })]),
+      el("span", {}, [el("span", { classe: "etq", texte: "Variation" }), el("span", { classe: "var", texte: formaterVariation(k.variation, k.unite) })])
+    ]),
+    el("div", { classe: "feux-annees" }, [
+      el("span", {}, [el("span", { classe: "etq", texte: "Feu 2027" }), pastille(k.feuN)]),
+      el("span", {}, [el("span", { classe: "etq", texte: "Feu 2026" }), pastille(k.feuN1)])
+    ]),
+    el("div", { classe: "pied" }, [el("div", {}, [sparkline(k), el("div", { classe: "sparkline-legende", texte: "2026 → 2027" })])]),
+    ligneVerification(verif, code)
+  ]);
+  const dico = el("section", { classe: "dico verre", "aria-labelledby": "titre-dico" }, [
+    el("h2", { id: "titre-dico", style: "font-size: 20px", texte: "Le dictionnaire du KPI" }),
+    el("dl", {}, [
+      el("div", {}, [el("dt", { texte: "Définition" }), el("dd", { texte: k.definition || "—" })]),
+      el("div", {}, [el("dt", { texte: "Unité" }), el("dd", { texte: k.unite || "—" })])
+    ]),
+    el("div", {}, [
+      el("p", { classe: "surtitre", style: "margin-bottom: 8px", texte: "Seuils" }),
+      el("div", { classe: "seuils" }, [
+        el("div", { classe: "seuil" }, [pastille("VERT"), el("div", { classe: "texte", texte: k.seuilVert || "—" })]),
+        el("div", { classe: "seuil" }, [pastille("AMBRE"), el("div", { classe: "texte", texte: k.seuilOrange || "—" })]),
+        el("div", { classe: "seuil" }, [pastille("ROUGE"), el("div", { classe: "texte", texte: k.seuilRouge || "—" })])
+      ])
+    ]),
+    el("dl", {}, [el("div", {}, [el("dt", { texte: "Pourquoi il compte" }), el("dd", { texte: k.pourquoi || "—" })])])
+  ]);
+  main.appendChild(el("div", { classe: "detail-kpi" }, [carte, dico]));
+}
+function ligneVerification(verif, code) {
+  if (!verif.disponible) return el("p", { classe: "verification", texte: "Recalcul indépendant indisponible : onglet RETRAITEMENTS-IFRS absent ou incomplet." });
+  const e = verif.ecarts.filter(x => x.code === code);
+  if (!e.length) return el("p", { classe: "verification" }, [pastille("VERT", ""), "Recalcul indépendant à partir du TFT et des bilans IFRS : identique au fichier."]);
+  return el("p", { classe: "verification" }, [pastille("AMBRE", ""), "Écart avec le recalcul : " + e.map(x => x.annee + " fichier " + formaterNombre(x.fichier, 4) + ", calcul " + formaterNombre(x.calcul, 4)).join(" ; ") + ". La valeur du fichier est affichée."]);
+}
+
+function piedDePage() {
+  const m = Etat.modele;
+  const verif = comparerRecalcul(m);
+  return el("footer", { classe: "pied-page" }, [
+    el("p", { texte: verif.disponible
+      ? (verif.ecarts.length ? "Vérification indépendante : " + verif.ecarts.length + " écart(s) entre le recalcul et le fichier ; les valeurs du fichier sont affichées." : "Vérification indépendante : " + verif.egaux + " valeurs de KPI sur " + verif.total + " recalculées à partir du TFT et des bilans IFRS, toutes égales au fichier.")
+      : "Vérification indépendante indisponible : onglet RETRAITEMENTS-IFRS absent." }),
+    el("p", { texte: "Source : " + (Sync.nomFichier || "fichier connecté") + " · Atlas Distribution SA (entreprise fictive) · montants en milliers de dirhams ; ratios, jours et « fois » non convertis." }),
+    el("p", { texte: "Les données sont lues dans votre navigateur : rien n'est envoyé sur Internet." })
+  ]);
+}
+
+/* =====================================================================
+   7. GRAPHIQUES (Apache ECharts)
+   ===================================================================== */
+const COULEURS = Object.freeze({ or: "#E0AE28", grenat: "#A3263B", blanc: "#FFFFFF", texte: "#E0AE28", texteDoux: "rgba(224,174,40,0.78)", grille: "rgba(255,255,255,0.07)" });
+function baseOption() {
+  return {
+    backgroundColor: "transparent",
+    animation: !reduireAnimations(), animationDuration: 900, animationEasing: "cubicOut",
+    textStyle: { fontFamily: "Inter, system-ui, sans-serif", fontWeight: 300, color: COULEURS.texte },
+    tooltip: { renderMode: "richText", backgroundColor: "rgba(8,8,8,0.96)", borderColor: "rgba(255,255,255,0.16)", textStyle: { color: "#FFFFFF", fontFamily: "Inter", fontWeight: 300, fontSize: 13 } },
+    aria: { enabled: false }
+  };
+}
+function creerGraphique(zone) {
+  if (!window.echarts || !zone || !document.contains(zone)) return null;
+  const g = echarts.init(zone, null, { renderer: "canvas" });
+  Etat.graphiques.push(g);
+  if ("ResizeObserver" in window) {
+    const o = new ResizeObserver(() => { try { g.resize(); } catch (e) { /* graphique détruit */ } });
+    o.observe(zone);
+    Etat.observateurs.push(o);
+  }
+  return g;
+}
+function grapheVide(zone, texte) { vider(zone); zone.removeAttribute("role"); zone.appendChild(el("div", { classe: "vide-graphique", texte })); }
+const estMobile = () => window.matchMedia("(max-width: 639px)").matches;
+
+/* Cascade : trésorerie nette 2026 → flux → trésorerie nette 2027 */
+function graphiqueCascade(zone, cascade) {
+  if (!cascade.length) { grapheVide(zone, "Données absentes : onglet KPI, section 4 « Cascade »."); return; }
+  const g = creerGraphique(zone); if (!g) return;
+  const dernier = cascade.length - 1;
+  const donnees = cascade.map((b, i) => {
+    const total = i === 0 || i === dernier;
+    const debut = total ? 0 : b.debut, fin = b.fin;
+    const delta = fin - debut;
+    return { value: [i, debut, fin, total ? fin : delta], couleur: total ? COULEURS.blanc : (delta >= 0 ? COULEURS.or : COULEURS.grenat), total };
+  });
+  const tousLesNiveaux = donnees.flatMap(d => [d.value[1], d.value[2]]);
+  const mobile = estMobile();
+  g.setOption(Object.assign(baseOption(), {
+    grid: { left: mobile ? 48 : 72, right: 16, top: 48, bottom: mobile ? 84 : 56 },
+    xAxis: { type: "category", data: cascade.map(b => b.barre), axisLine: { lineStyle: { color: "rgba(255,255,255,.18)" } }, axisTick: { show: false },
+      axisLabel: { color: COULEURS.texte, fontSize: 12, interval: 0, width: mobile ? 64 : 120, overflow: "break", rotate: 0 } },
+    yAxis: { type: "value", min: Math.min(0, ...tousLesNiveaux) * 1.15, max: Math.max(0, ...tousLesNiveaux) * 1.15, splitLine: { lineStyle: { color: COULEURS.grille } },
+      axisLabel: { color: COULEURS.texteDoux, fontSize: 11, formatter: (v) => formaterKmad(v) } },
+    tooltip: Object.assign(baseOption().tooltip, { trigger: "item", formatter: (p) => cascade[p.value[0]].barre + "\n" + (donnees[p.value[0]].total ? "" : "Variation : ") + formaterVariation(p.value[3], "DH") }),
+    series: [{
+      type: "custom", data: donnees.map(d => d.value),
+      renderItem: (params, api) => {
+        const i = api.value(0), a = api.value(1), b = api.value(2), montant = api.value(3);
+        const haut = api.coord([i, Math.max(a, b)]), bas = api.coord([i, Math.min(a, b)]);
+        const largeur = api.size([1, 0])[0] * 0.56;
+        const couleur = donnees[i].couleur;
+        const enfants = [{ type: "rect", shape: { x: haut[0] - largeur / 2, y: haut[1], width: largeur, height: Math.max(2, bas[1] - haut[1]), r: 4 },
+          style: { fill: couleur, shadowBlur: 18, shadowColor: couleur === COULEURS.blanc ? "rgba(255,255,255,.25)" : couleur } }];
+        const texte = donnees[i].total ? formaterKmad(montant) : formaterVariation(montant, "DH").replace(" k MAD", "");
+        const hauteur = bas[1] - haut[1];
+        if (!donnees[i].total && hauteur > 40) {
+          enfants.push({ type: "text", style: { text: texte, x: haut[0], y: (haut[1] + bas[1]) / 2, align: "center", verticalAlign: "middle",
+            fill: couleur === COULEURS.or ? "#000000" : COULEURS.blanc, font: "400 " + (mobile ? 12 : 16) + "px Cinzel, serif" } });
+        } else {
+          const auDessus = donnees[i].total ? b >= 0 : montant >= 0;
+          enfants.push({ type: "text", style: { text: texte, x: haut[0], y: auDessus ? haut[1] - 8 : bas[1] + 8, align: "center", verticalAlign: auDessus ? "bottom" : "top",
+            fill: COULEURS.blanc, font: "400 " + (mobile ? 12 : 15) + "px Cinzel, serif" } });
+        }
+        if (i < dernier) {
+          const suivant = api.coord([i + 1, b]);
+          enfants.push({ type: "line", shape: { x1: haut[0] + largeur / 2, y1: api.coord([i, b])[1], x2: suivant[0] - largeur / 2, y2: suivant[1] }, style: { stroke: "rgba(255,255,255,.28)", lineDash: [3, 3], lineWidth: 1 } });
+        }
+        return { type: "group", children: enfants };
+      },
+      encode: { x: 0, y: [1, 2] }
+    }]
+  }));
+}
+
+/* Sankey : d'où vient l'argent et où il va (onglet TFT) */
+function graphiqueSankey(zone, t) {
+  const v = (c) => (t[c] ? t[c].n : 0);
+  const flux = [
+    { nom: "Flux opérationnel", montant: v("OT") },
+    { nom: "Emprunts reçus", montant: v("F1") },
+    { nom: "Investissements", montant: v("IT") },
+    { nom: "Remboursements d'emprunts", montant: v("F2") },
+    { nom: "Intérêts", montant: v("F3") },
+    { nom: "Loyers IFRS 16", montant: v("F4") + v("F5") },
+    { nom: "Dividendes", montant: v("F6") },
+    { nom: v("V") < 0 ? "Baisse de la trésorerie" : "Hausse de la trésorerie", montant: -v("V") }
+  ].filter(f => Math.abs(f.montant) > 0.5);
+  if (!flux.length) { grapheVide(zone, "Données absentes : onglet TFT."); return; }
+  const g = creerGraphique(zone); if (!g) return;
+  const centre = "Cash de l'exercice";
+  const mobile = estMobile();
+  const noeuds = [{ name: centre, itemStyle: { color: COULEURS.blanc }, label: { position: mobile ? "top" : "top", color: COULEURS.blanc } }];
+  const liens = [];
+  for (const f of flux) {
+    const source = f.montant > 0;
+    noeuds.push({ name: f.nom, itemStyle: { color: source ? COULEURS.or : COULEURS.grenat }, label: { position: source ? "right" : "left" } });
+    liens.push(source ? { source: f.nom, target: centre, value: f.montant, lineStyle: { color: COULEURS.or, opacity: 0.30 } } : { source: centre, target: f.nom, value: -f.montant, lineStyle: { color: COULEURS.grenat, opacity: 0.55 } });
+  }
+  g.setOption(Object.assign(baseOption(), {
+    tooltip: Object.assign(baseOption().tooltip, { trigger: "item", formatter: (p) => p.dataType === "edge" ? p.data.source + " → " + p.data.target + "\n" + formaterValeur(p.data.value, "DH") : p.name + "\n" + formaterValeur(p.value, "DH") }),
+    series: [{
+      type: "sankey", left: mobile ? 8 : 24, right: mobile ? 8 : 24, top: 56, bottom: 16, nodeWidth: 14, nodeGap: mobile ? 12 : 16, layoutIterations: 0, draggable: false,
+      data: noeuds, links: liens, emphasis: { focus: "adjacency" },
+      label: { color: COULEURS.texte, fontSize: mobile ? 11 : 13, fontFamily: "Inter", fontWeight: 300,
+        formatter: (p) => p.name + "\n{v|" + formaterKmad(p.value) + " k MAD}", rich: { v: { fontFamily: "Cinzel", color: COULEURS.blanc, fontSize: mobile ? 12 : 14, padding: [4, 0, 0, 0] } } },
+      edgeLabel: { show: !mobile, color: "rgba(255,255,255,.85)", fontFamily: "Cinzel", fontSize: 12, formatter: (p) => formaterKmad(p.value) },
+      lineStyle: { curveness: 0.5 }
+    }]
+  }));
+}
+
+/* Jauges : conversion, levier, couverture de la dette (onglet KPI, section 4) */
+function graphiqueJauges(conteneur, m) {
+  if (!m.jauges.length) { grapheVide(conteneur, "Données absentes : onglet KPI, section 4 « Jauge »."); return; }
+  const codesParDefaut = ["K01", "K11", "K13"];
+  const codeJauge = (nom, i) => {
+    const n = normaliser(nom);
+    if (n.includes("conversion")) return "K01";
+    if (n.includes("dette nette")) return "K11";
+    if (n.includes("couverture")) return "K13";
+    return codesParDefaut[i];
+  };
+  m.jauges.slice(0, 3).forEach((j, i) => {
+    const code = codeJauge(j.nom, i);
+    const k = kpi(code) || {};
+    const unite = k.unite || "ratio";
+    const bloc = el("div", { classe: "jauge-bloc", dataset: { kpi: code } });
+    const zone = el("div", { classe: "graphique jauge", role: "img", "aria-label": j.nom + " : " + formaterValeur(j.valeur, unite) + ", " + j.repereMot + " " + formaterNombre(j.repere, 2) });
+    bloc.appendChild(el("h3", { texte: j.nom }));
+    bloc.appendChild(zone);
+    bloc.appendChild(el("p", { classe: "sous" }, [el("span", { classe: "num", texte: formaterValeur(j.valeur, unite) }), " · " + j.repereMot + " " + formaterNombre(j.repere, 2)]));
+    if (k.feuN) bloc.appendChild(pastille(k.feuN));
+    conteneur.appendChild(bloc);
+    const g = creerGraphique(zone); if (!g) return;
+    const max = j.maximum || 1;
+    const commun = { type: "gauge", min: 0, max, startAngle: 200, endAngle: -20, radius: "92%", center: ["50%", "60%"], splitNumber: 4, axisTick: { show: false }, splitLine: { show: false }, axisLabel: { show: false }, title: { show: false } };
+    g.setOption(Object.assign(baseOption(), {
+      series: [
+        Object.assign({}, commun, {
+          progress: { show: true, width: 12, roundCap: true, itemStyle: { color: COULEURS.or, shadowBlur: 16, shadowColor: "rgba(224,174,40,.45)" } },
+          axisLine: { roundCap: true, lineStyle: { width: 12, color: [[1, "rgba(255,255,255,0.08)"]] } },
+          pointer: { show: false }, anchor: { show: false },
+          detail: { valueAnimation: !reduireAnimations(), offsetCenter: [0, "8%"], fontFamily: "Cinzel", fontSize: 30, color: COULEURS.blanc, formatter: (x) => formaterNombre(x, 2) },
+          data: [{ value: Math.max(0, Math.min(max, j.valeur)) }]
+        }),
+        Object.assign({}, commun, {
+          axisLine: { show: false }, progress: { show: false }, detail: { show: false }, anchor: { show: false },
+          pointer: { show: true, icon: "rect", length: 18, width: 3, offsetCenter: [0, "-74%"], itemStyle: { color: COULEURS.blanc } },
+          data: [{ value: Math.max(0, Math.min(max, j.repere || 0)) }]
+        })
+      ]
+    }));
+  });
+}
+
+/* Entonnoir : EBITDA → flux opérationnel → après loyers → après service des emprunts */
+function graphiqueEntonnoir(zone, entonnoir) {
+  const etapes = entonnoir.filter(e => typeof e.valeur === "number");
+  if (!etapes.length) { grapheVide(zone, "Données absentes : onglet KPI, section 4 « Entonnoir »."); return; }
+  const g = creerGraphique(zone); if (!g) return;
+  const max = Math.max(...etapes.map(e => e.valeur));
+  g.setOption(Object.assign(baseOption(), {
+    tooltip: Object.assign(baseOption().tooltip, { trigger: "item", formatter: (p) => p.name + "\n" + formaterValeur(p.value, "DH") }),
+    series: [{
+      type: "funnel", sort: "none", min: 0, max, minSize: "46%", maxSize: "100%", left: "6%", right: "6%", top: 12, bottom: 12, gap: 6,
+      data: etapes.map((e, i) => ({ name: e.etape, value: e.valeur, itemStyle: { color: i === 0 ? COULEURS.or : "rgba(255,255,255," + (0.96 - i * 0.07).toFixed(2) + ")", borderWidth: 0 } })),
+      label: { show: true, position: "inside", color: "#000", fontFamily: "Inter", fontWeight: 300, fontSize: 13,
+        formatter: (p) => {
+          const i = p.dataIndex;
+          const ecart = i > 0 ? etapes[i].valeur - etapes[i - 1].valeur : null;
+          return p.name + "\n{v|" + formaterKmad(p.value) + "}" + (ecart !== null ? "  {d|" + formaterKmad(ecart) + "}" : "");
+        },
+        rich: { v: { fontFamily: "Cinzel", fontSize: 16, color: "#000" }, d: { fontFamily: "Cinzel", fontSize: 13, color: "#7A1528" } } },
+      labelLine: { show: false }
+    }]
+  }));
+}
+
+/* Radar : 6 axes, score 2027 face à 2026, avec la cible */
+function graphiqueRadar(zone, radar) {
+  if (!radar.length) { grapheVide(zone, "Données absentes : onglet KPI, section 4 « Radar »."); return; }
+  const g = creerGraphique(zone); if (!g) return;
+  const mobile = estMobile();
+  g.setOption(Object.assign(baseOption(), {
+    legend: { top: 0, textStyle: { color: COULEURS.texte, fontSize: 13 }, data: ["Score 2027", "Score 2026", "Cible"] },
+    tooltip: Object.assign(baseOption().tooltip, { trigger: "item", formatter: (p) => p.name + "\n" + radar.map((r, i) => r.axe + " : " + p.value[i]).join("\n") }),
+    radar: {
+      center: ["50%", "56%"], radius: mobile ? "58%" : "68%", splitNumber: 4,
+      indicator: radar.map(r => ({ name: r.axe, min: 0, max: 100 })),
+      axisName: { color: COULEURS.texte, fontSize: mobile ? 11 : 13, fontFamily: "Inter" },
+      splitLine: { lineStyle: { color: "rgba(255,255,255,0.10)" } },
+      splitArea: { areaStyle: { color: ["rgba(255,255,255,0.015)", "rgba(255,255,255,0.03)"] } },
+      axisLine: { lineStyle: { color: "rgba(255,255,255,0.12)" } }
+    },
+    series: [{
+      type: "radar", symbol: "circle", symbolSize: 5,
+      data: [
+        { name: "Score 2027", value: radar.map(r => r.scoreN), lineStyle: { color: COULEURS.or, width: 2 }, itemStyle: { color: COULEURS.or }, areaStyle: { color: "rgba(224,174,40,0.16)" } },
+        { name: "Score 2026", value: radar.map(r => r.scoreN1), lineStyle: { color: COULEURS.blanc, width: 1.5, type: "dashed" }, itemStyle: { color: COULEURS.blanc } },
+        { name: "Cible", value: radar.map(() => 100), lineStyle: { color: "rgba(255,255,255,0.45)", width: 1, type: "dotted" }, itemStyle: { color: "rgba(255,255,255,0.45)" }, symbol: "none" }
+      ]
+    }]
+  }));
+}
+
+/* Bullet chart : délais face à leur seuil vert (onglet KPI, section 5) */
+function graphiqueBullet(zone, bullet, kpis) {
+  const lignes = bullet.filter(b => typeof b.valeur === "number");
+  if (!lignes.length) { grapheVide(zone, "Données absentes : onglet KPI, section 5 « Poste du cycle de cash »."); return; }
+  const g = creerGraphique(zone); if (!g) return;
+  const noms = lignes.map(b => "Délai " + b.poste);
+  const max = Math.max(...lignes.flatMap(b => [b.valeur, b.seuil || 0])) * 1.25;
+  g.setOption(Object.assign(baseOption(), {
+    grid: { left: 140, right: 32, top: 24, bottom: 36 },
+    xAxis: { type: "value", max: Math.ceil(max / 10) * 10, splitLine: { lineStyle: { color: COULEURS.grille } }, axisLabel: { color: COULEURS.texteDoux, formatter: (v) => v + " j" } },
+    yAxis: { type: "category", data: noms, inverse: true, axisLine: { show: false }, axisTick: { show: false }, axisLabel: { color: COULEURS.texte, fontSize: 13 } },
+    tooltip: Object.assign(baseOption().tooltip, { trigger: "item", formatter: (p) => noms[p.dataIndex] + "\n2027 : " + formaterNombre(lignes[p.dataIndex].valeur, 1) + " j · seuil vert : " + formaterNombre(lignes[p.dataIndex].seuil, 0) + " j" }),
+    series: [
+      { type: "bar", data: lignes.map(() => Math.ceil(max / 10) * 10), barWidth: 26, silent: true, itemStyle: { color: "rgba(255,255,255,0.04)", borderRadius: 6 }, barGap: "-100%", animation: false },
+      { type: "bar", data: lignes.map(b => b.valeur), barWidth: 12, itemStyle: { color: COULEURS.or, borderRadius: 6, shadowBlur: 12, shadowColor: "rgba(224,174,40,.35)" },
+        label: { show: true, position: "right", fontFamily: "Cinzel", color: COULEURS.blanc, fontSize: 14, formatter: (p) => formaterNombre(p.value, 1) + " j" } },
+      { type: "scatter", data: lignes.map((b, i) => [b.seuil, i]), symbol: "rect", symbolSize: [3, 30], itemStyle: { color: COULEURS.blanc }, z: 5,
+        label: { show: true, position: "top", color: COULEURS.texteDoux, fontSize: 11, formatter: (p) => "seuil vert " + formaterNombre(p.value[0], 0) + " j" } }
+    ]
+  }));
+}
+
+/* =====================================================================
+   8. FOND ANIMÉ · particules reliées, reflets noirs brillants
+   ===================================================================== */
+function demarrerParticules() {
+  const canvas = document.getElementById("particules");
+  if (!canvas || !canvas.getContext) return;
+  const ctx = canvas.getContext("2d");
+  let largeur = 0, hauteur = 0, points = [], animation = null;
+  const fixe = () => reduireAnimations() || window.matchMedia("(max-width: 899px), (pointer: coarse)").matches;
+  const redimensionner = () => {
+    const ratio = Math.min(window.devicePixelRatio || 1, 2);
+    largeur = window.innerWidth; hauteur = window.innerHeight;
+    canvas.width = largeur * ratio; canvas.height = hauteur * ratio;
+    ctx.setTransform(ratio, 0, 0, ratio, 0, 0);
+    const nb = Math.round(Math.min(70, Math.max(24, largeur * hauteur / 26000)));
+    points = Array.from({ length: nb }, () => ({ x: Math.random() * largeur, y: Math.random() * hauteur, vx: (Math.random() - 0.5) * 0.16, vy: (Math.random() - 0.5) * 0.16, r: 0.8 + Math.random() * 1.4 }));
+  };
+  const dessiner = () => {
+    ctx.clearRect(0, 0, largeur, hauteur);
+    for (let i = 0; i < points.length; i++) {
+      const a = points[i];
+      for (let j = i + 1; j < points.length; j++) {
+        const b = points[j], dx = a.x - b.x, dy = a.y - b.y, d = Math.sqrt(dx * dx + dy * dy);
+        if (d < 160) { ctx.strokeStyle = "rgba(255,255,255," + (0.05 * (1 - d / 160)).toFixed(3) + ")"; ctx.lineWidth = 0.6; ctx.beginPath(); ctx.moveTo(a.x, a.y); ctx.lineTo(b.x, b.y); ctx.stroke(); }
+      }
+    }
+    for (const p of points) {
+      const grad = ctx.createRadialGradient(p.x, p.y, 0, p.x, p.y, p.r * 4);
+      grad.addColorStop(0, "rgba(255,255,255,0.22)"); grad.addColorStop(0.35, "rgba(255,255,255,0.05)"); grad.addColorStop(1, "rgba(0,0,0,0)");
+      ctx.fillStyle = grad; ctx.beginPath(); ctx.arc(p.x, p.y, p.r * 4, 0, Math.PI * 2); ctx.fill();
+      ctx.fillStyle = "#050505"; ctx.beginPath(); ctx.arc(p.x, p.y, p.r, 0, Math.PI * 2); ctx.fill();
+    }
+  };
+  const boucle = () => {
+    for (const p of points) {
+      p.x += p.vx; p.y += p.vy;
+      if (p.x < -20) p.x = largeur + 20; if (p.x > largeur + 20) p.x = -20;
+      if (p.y < -20) p.y = hauteur + 20; if (p.y > hauteur + 20) p.y = -20;
+    }
+    dessiner();
+    animation = requestAnimationFrame(boucle);
+  };
+  const relancer = () => {
+    cancelAnimationFrame(animation); animation = null;
+    redimensionner();
+    if (fixe() || document.hidden) dessiner(); else boucle();
+  };
+  window.addEventListener("resize", relancer);
+  document.addEventListener("visibilitychange", relancer);
+  window.matchMedia("(prefers-reduced-motion: reduce)").addEventListener("change", () => { relancer(); dessinerPage({ conserverDefilement: true }); });
+  relancer();
+}
+
+/* =====================================================================
+   9. DÉMARRAGE
+   ===================================================================== */
+async function demarrer() {
+  if (estEncadre) return;
+  Sync.actif = lireReglageSynchro();
+  dessinerMenu();
+  dessinerPage();
+  demarrerParticules();
+  installerDepot();
+  document.getElementById("entree-fichier").addEventListener("change", (e) => { const f = e.target.files && e.target.files[0]; if (f) importerFichier(f); });
+  document.getElementById("volet-fond").addEventListener("click", fermerVolet);
+  document.addEventListener("keydown", (e) => { if (e.key === "Escape") { fermerVolet(); document.getElementById("menu").classList.remove("ouvert"); } });
+  document.addEventListener("click", (e) => { const nav = document.getElementById("menu"); if (nav.classList.contains("ouvert") && !nav.contains(e.target)) nav.classList.remove("ouvert"); });
+  window.addEventListener("hashchange", () => {
+    document.getElementById("menu").classList.remove("ouvert");
+    detruireGraphiques();
+    dessinerMenu();
+    dessinerPage();
+    window.scrollTo(0, 0);
+    const t = document.getElementById("titre-page");
+    if (t) t.focus({ preventScroll: true });
+  });
+  /* L'onglet revenu au premier plan déclenche une vérification immédiate */
+  document.addEventListener("visibilitychange", () => { if (!document.hidden && Sync.actif && (Sync.mode === "direct" || Sync.mode === "en-ligne")) verifier(); });
+
+  if (!window.XLSX || !window.echarts) {
+    Etat.chargement = false;
+    Etat.erreurInitiale = new ErreurLecture("Les bibliothèques de lecture et de graphiques n'ont pas pu être chargées. Vérifiez votre connexion Internet, puis réessayez.");
+    dessinerPage();
+    return;
+  }
+  try { if (document.fonts && document.fonts.ready) await Promise.race([document.fonts.ready, attendre(1500)]); } catch (e) { /* polices facultatives */ }
+
+  /* 1) Le fichier déjà connecté (mode Direct) */
+  const poignee = supporteAccesDirect ? await idb("lire") : null;
+  if (poignee && typeof poignee.queryPermission === "function") {
+    Sync.poignee = poignee; Sync.mode = "direct"; Sync.nomFichier = poignee.name;
+    let perm = "prompt";
+    try { perm = await poignee.queryPermission({ mode: "read" }); } catch (e) { perm = "prompt"; }
+    if (perm === "granted") {
+      await verifier();
+      if (Etat.modele) return;
+    } else {
+      Etat.chargement = false;
+      changerEtat("reconnexion", "Un clic sur « Reconnecter » suffit pour reprendre le suivi de « " + poignee.name + " ».");
+    }
+  }
+  /* 2) donnees.xlsx à côté d'index.html (mode En ligne) */
+  if (!Etat.modele && estEnLigne && Sync.mode !== "direct") {
+    Sync.mode = "en-ligne";
+    const ok = await verifierEnLigne(true);
+    if (ok) { planifier(); return; }
+    Sync.mode = null;
+  }
+  /* 3) Sinon : « Connecter mon fichier Excel » avec une zone de dépôt */
+  Etat.chargement = false;
+  if (Sync.statut !== "reconnexion") changerEtat("aucun");
+  dessinerPage();
+}
+
+demarrer();
+</script>
+</body>
+</html>
